@@ -40,7 +40,8 @@ niveau.ts %>%
                           y = Wert)) +
   labs(title = "Time Series: Water Levels",
        x = "Time of Occurrence",
-       y = "Value")
+       y = "Value") + 
+  geom_hline(yintercept=328.4, linetype="dashed", color = "red")
 
 ```
 ## Value Distribution
