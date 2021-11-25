@@ -31,6 +31,11 @@ niveau.ts <- niveau %>%
 
 ```
 
+## Time Series: Water Levels
+
+The below plot shows the evolution of water level over 21 years, from January 1st 2000 to August 1st 2021. 
+
+[add comment about the red dashed line]
 ```{r}
 
 # Plot the time series
@@ -38,27 +43,69 @@ niveau.ts %>%
   ggplot() + 
   geom_line(mapping = aes(x = Zeitpunkt_des_Auftretens, 
                           y = Wert)) +
+  
   labs(title = "Time Series: Water Levels",
        x = "Time of Occurrence",
        y = "Value") + 
-  geom_hline(yintercept=328.4, linetype="dashed", color = "red")
+  
+  geom_hline(yintercept = 328.4, 
+             linetype = "dashed", 
+             color = "red")
 
 ```
 ## Value Distribution
 
-We observe a right-skwed distribution of the water level values.
+The below output shows the five-number statistics summary of the water level values. We immediately understand that the values are not symmetrical around the mean but much more tightly grouped on the lefts side of the mean (and the median) than on its right side, indicating that the water level values's distribution is right-skewed. 
 
-```{r}
+```{r, echo=F, warning=F, message=F}
 
+summary(niveau.ts$Wert)
+
+```
+
+The below histogram (i.e. frequency distribution) confirms the above observations. Indeed, we see that the data is right-skewed (i.e. non-normal) indicating that the data is disproportionally distributed on the right where water level outliers need to be investigated.     
+
+On top of the histogram we add a red curve being the smoothed version of the histogram showing again the shape of the distribution, a purple line indicating the median water level value (value that splits the observation in half) and the average water level in green. 
+
+Looking at the positions on the x-axis of the mean and the median [add mode at some point], we see that the mean seems to be a better indication of the center of the distribution. [adapt interpretation when mode is on].
+
+```{r, echo=F, warning=F, message=F}
 # Histogram
 niveau.ts %>% 
   ggplot() + 
   geom_histogram(mapping = aes(Wert),
                  stat = "count") +
-  geom_density(mapping = aes(Wert), stat = "density", colour="red") +
+  
+  # Adds smoothed version of the histogram
+  geom_density(mapping = aes(Wert), stat = "density", colour = "red") + 
+  
+  # Adds the mode
+  #geom_vline(xintercept = mode(niveau.ts$Wert),       
+             #col = "blue",
+             #lwd = 1) +
+  
+  # Adds the mean
+  geom_vline(xintercept = mean(niveau.ts$Wert),       
+             col = "green",
+             lwd = 1) +
+  
+  # Adds the median
+  geom_vline(xintercept = median(niveau.ts$Wert),       
+             col = "purple",
+             lwd = 1) +
+
   labs(title = "Water Levels Frequencies",
        x = "Value",
        y = "Frequency")
 
 ```
 
+## Risk Assessment
+
+- [peaks-over-threshold method]
+- [clustering of the extremes]
+- [drawbacks and advantages of using block maxima method instead ]
+
+### 50-Year Events
+
+### 100-Year Events
