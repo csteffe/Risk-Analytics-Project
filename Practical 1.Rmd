@@ -53,7 +53,8 @@ We observe a right-skwed distribution of the water level values.
 niveau.ts %>% 
   ggplot() + 
   geom_histogram(mapping = aes(Wert),
-                 stat = "count")
+                 stat = "count") +
+  geom_density(mapping = aes(Wert), stat = "density", colour="red") +
   labs(title = "Water Levels Frequencies",
        x = "Value",
        y = "Frequency")
