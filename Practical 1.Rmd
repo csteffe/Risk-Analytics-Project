@@ -1,8 +1,31 @@
 ---
-title: "Practical 1"
+title: "Practical 1: High Water Levels"
 author: "Colin Steffe, Virany Kho, Jasmine Mawjee, Adela Sahraoui"
 date: "`r Sys.Date()`"
 output: pdf_document
 ---
 
+```{r}
 
+# Read in the data
+load(file = here::here("niveau.Rdata"))
+
+```
+
+```{r}
+
+library(lubridate)
+library(tibble)
+library(tsibble)
+
+# Convert column 8 into date type
+niveau$Zeitpunkt_des_Auftretens <- as.POSIXct(niveau$Zeitpunkt_des_Auftretens)
+#niveau$Zeitpunkt_des_Auftretens[1]
+
+# Transform into tibble
+niveau <- as_tibble(niveau)
+niveau <- as_tsibble(niveau,
+                     index = niveau$Zeitpunkt_des_Auftretens, 
+                     key = c(niveau$Stationsname, niveau$Stationsname))
+
+```
