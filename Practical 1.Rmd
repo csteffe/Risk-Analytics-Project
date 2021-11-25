@@ -17,15 +17,46 @@ load(file = here::here("niveau.Rdata"))
 library(lubridate)
 library(tibble)
 library(tsibble)
+library(fpp3)
 
 # Convert column 8 into date type
-niveau$Zeitpunkt_des_Auftretens <- as.POSIXct(niveau$Zeitpunkt_des_Auftretens)
+niveau <- niveau %>%
+          mutate(Zeitpunkt_des_Auftretens = as_datetime(Zeitpunkt_des_Auftretens))
 #niveau$Zeitpunkt_des_Auftretens[1]
 
 # Transform into tibble
-niveau <- as_tibble(niveau)
-niveau <- as_tsibble(niveau,
-                     index = niveau$Zeitpunkt_des_Auftretens, 
-                     key = c(niveau$Stationsname, niveau$Stationsname))
+niveau.ts <- niveau %>%
+             as_tsibble(index = Zeitpunkt_des_Auftretens,
+                        key = Zeitstempel)
 
 ```
+
+```{r}
+
+# Plot the time series
+niveau.ts %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x = Zeitpunkt_des_Auftretens, 
+                          y = Wert)) +
+  labs(title = "Time Series: Water Levels",
+       x = "Time of Occurrence",
+       y = "Value")
+
+```
+## Value Distribution
+
+We observe a right-skwed distribution of the water level values.
+
+```{r}
+
+# Histogram
+niveau.ts %>% 
+  ggplot() + 
+  geom_histogram(mapping = aes(Wert),
+                 stat = "count")
+  labs(title = "Water Levels Frequencies",
+       x = "Value",
+       y = "Frequency")
+
+```
+
