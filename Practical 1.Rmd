@@ -1,0 +1,8 @@
+---
+title: "Practical 1"
+author: "Colin Steffe, Virany Kho, Jasmine Mawjee, Adela Sahraoui"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+

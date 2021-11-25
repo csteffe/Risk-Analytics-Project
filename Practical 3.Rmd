@@ -1,0 +1,7 @@
+---
+title: "Practical 3"
+author: "Colin Steffe, Virany Kho, Jasmine Mawjee, Adela Sahraoui"
+date: "11/25/2021"
+output: html_document
+---
+
