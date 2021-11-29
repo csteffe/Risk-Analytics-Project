@@ -33,24 +33,22 @@ niveau.ts <- niveau %>%
 
 ## Time Series: Water Levels
 
-The below plot shows the evolution of water level over 21 years, from January 1st 2000 to August 1st 2021. 
+The below plot shows the evolution of water level over 21 years, from January 1st 2000 to August 1st 2021. The highest peaks have mainly been observed in the summer months, with the highest peaks recorded occuring in August 9th 2007 at 329.323, August 25th 2005 at 328.827, and in July 14th 2021 at a value of 328.622
 
-[add comment about the red dashed line]
 ```{r}
 
+library(plotly)
 # Plot the time series
-niveau.ts %>% 
+time_series <- niveau.ts %>% 
   ggplot() + 
   geom_line(mapping = aes(x = Zeitpunkt_des_Auftretens, 
                           y = Wert)) +
   
   labs(title = "Time Series: Water Levels",
        x = "Time of Occurrence",
-       y = "Value") + 
-  
-  geom_hline(yintercept = 328.4, 
-             linetype = "dashed", 
-             color = "red")
+       y = "Value") 
+
+ggplotly(time_series) %>% config(displayModeBar = F)
 
 ```
 ## Value Distribution
@@ -103,7 +101,11 @@ niveau.ts %>%
 ## Risk Assessment
 
 - [peaks-over-threshold method]
+The Peaks-over-Threshold method identifies extreme values that are above a designated threshold u. In order to determine the threshold we can apply the MRL-plot and then look at the distribution of data points above this threshold.
+
 - [clustering of the extremes]
+
+
 - [drawbacks and advantages of using block maxima method instead ]
 
 ### 50-Year Events
