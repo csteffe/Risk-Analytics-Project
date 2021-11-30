@@ -123,6 +123,14 @@ m <- mrl(niveau.ts$Wert)
 # Plot mean residual life 
 plot(m) 
 
+# Plot mean residual life with ggplot
+library(ggplot2)
+
+m %>% ggplot() +
+      labs(title = "Mean Residual Life Plot",
+      x = "Threshold",
+      y = "Mean Excess") 
+
 ```
 The threshold could be put at around 326 (?), or 327 (?).
 
