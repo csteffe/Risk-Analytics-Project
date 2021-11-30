@@ -101,7 +101,7 @@ niveau.ts %>%
 ## Risk Assessment
 
 - [peaks-over-threshold method]
-The Peaks-over-Threshold method identifies extreme values that are above a designated threshold u. In order to determine the threshold we can apply the MRL-plot and then look at the distribution of data points above this threshold.
+The Peaks-over-Threshold method identifies extreme values that are above a designated threshold u. In order to determine an optimal threshold we will apply the MRL-plot and then look at the distribution of the data points. The value of u above which the plot is approximately linear can generally be selected as the optimal threshold. So,this is what we are going to do to model the high water levels: first we will make a MRL-plot to choose the optimal threshold and then use the Peak-over-Threshold method.
 
 - [clustering of the extremes]
 
