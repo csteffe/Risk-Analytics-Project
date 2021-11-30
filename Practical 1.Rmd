@@ -108,8 +108,24 @@ Clusters of the extremes correspond to the clustering of the data points that ar
 Consecutive threshold exceedances are considered to belong to the same cluster.
 In our case, concerning the daily water levels data, by using the Peak-over-Threshold approach we can observe thanks to the plot the different clusters of the extreme values, then we can fit the point process model/Peak-over-Threshold model (?) to the cluster maxima (after declustering if the exceedances exhibit autocorrrelation).
 
-
 - [drawbacks and advantages of using block maxima method instead ]
+
+
+### Analysis
+
+```{r}
+
+library(texmex)
+
+# Calculate mean residual life 
+m <- mrl(niveau.ts$Wert)
+
+# Plot mean residual life 
+plot(m) 
+
+```
+The threshold could be put at around 326 (?), or 327 (?).
+
 
 ### 50-Year Events
 
