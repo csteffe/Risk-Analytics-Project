@@ -115,24 +115,36 @@ In our case, concerning the daily water levels data, by using the Peak-over-Thre
 
 ```{r}
 
-library(texmex)
+# Plot mean residual life (MRL)
+library(ismev)
+mrl.plot(niveau.ts$Wert)
 
-# Calculate mean residual life 
-m <- mrl(niveau.ts$Wert)
-
-# Plot mean residual life 
-plot(m) 
-
-# Plot mean residual life with ggplot
-library(ggplot2)
-
-m %>% ggplot() +
-      labs(title = "Mean Residual Life Plot",
-      x = "Threshold",
-      y = "Mean Excess") 
+# Plot MRL with ggplot
+# library(ggplot2)
+# m %>% ggplot() +
+     # labs(title = "Mean Residual Life Plot",
+     # x = "Threshold",
+     #  y = "Mean Excess") 
 
 ```
-The threshold could be put at around 326 (?), or 327 (?).
+The threshold could be put at around 326 or 327.
+
+
+
+```{r}
+
+library(extRemes)
+
+threshold <- 327 # 327 as Threshold looks better than 326
+
+# Plot of Peak-over-Threshold
+plot(x = rep(1:7883, each = 1), y = unlist(niveau.ts$Wert), main = "Peak Over Thresholds",
+     sub = paste("threshold =", threshold), xlab = "series", ylab = "value")
+pot_points <- unlist(niveau.ts$Wert) > threshold
+points(x = rep(1:7883, each = 1)[pot_points], y = unlist(niveau.ts$Wert)[pot_points], col = "red")
+abline(h = threshold, col = "red")
+
+```
 
 
 ### 50-Year Events
