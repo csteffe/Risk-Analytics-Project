@@ -138,11 +138,9 @@ The objective behind the EVA is to find valid estimates of the frequency (expres
 
 ## Peak-Over-Threshold (POT) Method
 
-The **Peak-Over-Threshold** method provides a model for independent exceedances (i.e. extreme values) above a large threshold. Therefore, it identifies values that are **high enough** to be above a designated threshold $\mu$, above which we consider are the extremes (i.e. highest values). 
+The **Peak-Over-Threshold** method provides a model for independent exceedances (i.e. extreme values) above a large threshold. Therefore, it identifies values that are **high enough** to be above a designated threshold $\mu$, above which we consider are the extremes (i.e. highest values). In order to determine an optimal threshold, we apply the **MRL-plot** and then look at the distribution of the exceedances. 
 
-In order to determine an optimal threshold, we apply the **MRL-plot** and then look at the distribution of the exceedances. [The number of exceedances arise according to a **Poisson** distribution with parameter lambda (i.e. probability of getting an exceedance) ? + We assume that exceedances are **independent** (i.e. no auto-correlation?), **identically distributed** (i.e. are random variables) and their distribution is **asymptotic**. ? ]. 
-
-The value of $\mu$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. [not sure I understand this sentence] Therefore, to model the high water levels, we first proceed to an MRL-plot to choose the optimal threshold $\mu$ and then, we use the Peaks-over-Threshold method [we look at the distribution of the exceedances to assess their probability of occurrence].
+The value of $u$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. [not sure I understand this sentence] Therefore, to model the high water levels, we first proceed to an MRL-plot to choose the optimal threshold $u$ and then, we use the Peaks-over-Threshold method [we look at the distribution of the exceedances to assess their probability of occurrence].
 
 ## Clustering of the extremes
 
@@ -155,15 +153,15 @@ In our case, concerning the daily water levels data, by using the Peak-over-Thre
 
 ### Threshold Selection
 
-First, we start by selecting an appropriate threshold $\mu$ to use for fitting the GPD or point process models. To do so, we use the *mrlplot()* function from the **extRemes** package which plots the potential thresholds against the mean excess.
+First, we start by selecting an appropriate threshold $u$ to use for fitting the GPD or point process models. To do so, we use the *mrlplot()* function from the **extRemes** package which plots the potential thresholds against the mean excess.
 
-The mean excess is calculated by $(mean\ of \ exceedances \ of \ \mu - \mu)$
+The mean excess function $e(u) = E(X - u| X > u)$ is the expected value of the difference between the random variable (i.e. exceedances) and the high threshold (i.e. $u$), knowing that the exceedance is greater than the threshold . [check if translation from algebric expression is correct] And we are interested in finding the distribution of the daily water level maxima that are above the threshold $u$, which is the excess distribution function $F_u(x) = P(X - u \leq x | X > u)$. 
 
-The difficulty of choosing an adequate threshold $\mu$ lies in the fact that it requires a good balance between selecting a threshold low enough so that we have enough exceedances to obtain useful results (i.e. results precision) but high enough so that the GPD and point process methods are approximately valid (i.e. bias). 
+The difficulty of choosing an adequate threshold $u$ lies in the fact that it requires a good balance between selecting a threshold low enough so that we have enough exceedances to obtain useful results (i.e. results precision) but high enough so that the GPD and point process methods are approximately valid (i.e. bias). 
 
 [Notes for ourselves in case of a question: "If we take the threshold to be so low that most of the data are exceedances then the analysis will only be valid if the raw data came from a generalized Pareto distribution (which will rarely be the case)"]
 
-The below **Mean Residual Life Plot** indicates for each potential threshold $\mu$ its mean excess. As mentioned previously, the value of $\mu$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. The dashed curves represent the confidence intervals of the mean excesses which help assess its type (i.e. constant, linear). Therefore, we decide to choose a threshold $\mu = 327\ [m.a.s.l]$ form which the curve seems to become more linear.
+The below **Mean Residual Life Plot** indicates for each potential threshold $\mu$ its mean excess. As mentioned previously, the value of $u$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. The dashed curves represent the confidence intervals of the mean excesses which help assess its type (i.e. constant, linear). Therefore, we decide to choose a threshold $u = 327\ [m.a.s.l]$ form which the curve seems to become more linear.
 
 From now on, daily water level maxima above $327\ [m.a.s.l]$ are considered exceedances/extreme values/outliers [quel est le meilleur terme?]. 
 
@@ -256,6 +254,10 @@ points(niveau.ts$Zeitpunkt_des_Auftretens[-1],
 ```
 
 ## Generalized Pareto Distribution (GPD)
+
+Extreme Value theory suggests that GPD is a *natural approximation* of the excess distribution function $F_u(x)$ where $x$ is the excess, so $F_u(x) \approx G_{\xi, \beta}(x)$. [maybe add parameters conditions]
+
+Under the assumption that exceedances are **independent** (i.e. no auto-correlation?), **identically distributed** (i.e. are random variables) and their distribution is **asymptotic** (i.e. ?), we fit the GDP model on the daily water level exceedances.  
 
 ```{r GPD, echo=F, warning=F, message=F}
 
