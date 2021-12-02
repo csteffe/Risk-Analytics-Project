@@ -1,0 +1,21 @@
+# Notes from 2.12.2021:
+
+we don't use the quantile $F^{-1}$ because to compute for the tail of the distribution is not good 
+
+peaks-over-threshold we take values high enough to show the extremes -> number of exceedences arise according to a Poisson distribution with lambda parameter (probability of getting an exceedence)
+
+to find mu we can use the plot method not perfect answer though we take the quantile and keep what is over the quantile 
+alpha is the risk level that we want to take 
+
+ES: expected shortfall
+
+practical 2: back testing
+
+data -> $x_1, .., x_n$ -> cross validation for the risk measure -> split data set in two (training set and test set) -> backtesting on training test -> use a window on 150 days for the value at risk everyday -> estimation of ? value at risk -> every day for each value at risk at level alpha there is a probaility p = 1-p that my value at risk is exceeded -> value at risk has a very small probability 1 - alpha that it is exceeded -> distribution is 0 (not violated) or 1 (if violated) is the bernouilli distribution : if x > value at risk at value alpha, = 1 with prob p = 1- alpha and = 0 otherwise with p = alpha -> everyday we have an indicator that follows a bernouilli distribution if the model/value at risk is correct -> if 500 value at risk every day for 500 days: the sum of independent bernouillis is a binomial distirbution (repeats independent bernuoilli experiments) where n= 500 and p = 0.5 -> intuitively: 500 days for each day we have a value at risk at alpha 0.95% -> how many times can i expect a value to be over the value at risk: 500*0.05 = 25 times -> we can expect that in 25 times we have a vioation of the value at risk = value that canbe exceeded once time in probability 0.05 (n is n' in the slides ) => on R: estimate value at risk every day with moving window of historical data, each day we compare with the data we have (crossvalidation), if validated = 1 otherwise 0, binomial test => compare the expected number of violation with the ones we got => best way to assess the value at risk 
+
+the normal distribution would ten dto underestmate the value at risk/risk we we'd compare our value at risk with the quantile of the normal distribution !
+
+
+
+
+
