@@ -106,7 +106,7 @@ The Peaks-over-Threshold method identifies extreme values that are above a desig
 - [clustering of the extremes]
 Clusters of the extremes correspond to the clustering of the data points that are above the chosen threshold u.
 Consecutive threshold exceedances are considered to belong to the same cluster.
-In our case, concerning the daily water levels data, by using the Peak-over-Threshold approach we can observe thanks to the plot the different clusters of the extreme values, then we can fit the point process model/Peak-over-Threshold model (?) to the cluster maxima (after declustering if the exceedances exhibit autocorrrelation).
+In our case, concerning the daily water levels data, by using the Peak-over-Threshold approach we can observe thanks to the plot the different clusters of the extreme values, then we can fit the Generalized Pareto Distribution (GPD) to the cluster maxima (after declustering if the exceedances exhibit autocorrrelation).
 
 - [drawbacks and advantages of using block maxima method instead ]
 
