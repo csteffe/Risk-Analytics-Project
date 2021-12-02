@@ -13,12 +13,19 @@ load(file = here::here("niveau.Rdata"))
 
 ```
 
+# Data
+
+The next table displays the first six rows of the *niveau* data set. 
+
+The data set collects the Aare's daily maximum water levels in one unique station in Stilli, Untersiggenthal (canton of Aargau) and records the exact times at which daily maximal values are detected. 
+
 ```{r tsibble, echo=F, warning=F, message=F}
 
 library(lubridate)
 library(tibble)
 library(tsibble)
 library(fpp3)
+library(kableExtra)
 
 # Convert column 8 into date type
 niveau <- niveau %>%
@@ -30,13 +37,18 @@ niveau.ts <- niveau %>%
              as_tsibble(index = Zeitpunkt_des_Auftretens,
                         key = Zeitstempel)
 
+head(niveau.ts, 6) %>%
+  kbl(align = c('c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c')) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), 
+                full_width = F)  
+
 ```
 
-## Time Series: Water Levels
+# Time Series: Water Levels
 
 The below plot shows the evolution of water levels over 21 years from 01-01-2000 to 01-08-2021. 
 
-First, we observe a pattern indicating that water levels fluctuate a lot within a year (i.e. seasonality?). Second, we see that the lowest troughs are quite constant over the years (~325.5) whereas the highest peaks really distinguish themselves among the overall peaks. Indeed, we observe that the highest peaks were mainly observed in the Summer months with the highest peaks recorded on 25-08-2005 at 328.827 [add unit], on 09-06-2007 at 329.323 [add unit of measurement] and on 14-07-2021 at 328.622 [add unit]. Therefore, over 21 years three years have had extremely and unusually high water levels during the summer, respectively 2005, 2007 and 2021. 
+First, we observe a pattern indicating that water levels fluctuate a lot within a year (i.e. seasonality?). Second, we see that the lowest troughs are quite constant over the years (~325.5 meter above sea) whereas the highest peaks really distinguish themselves among the overall peaks. Indeed, we observe that peaks are mainly observed in the Summer months with the highest peaks recorded on 25-08-2005 at 328.827 [meter above sea], on 09-06-2007 at 329.323 [meter above sea] and on 14-07-2021 at 328.622 [meter above sea]. Therefore, over 21 years three years have had extremely and unusually high water levels during the summer, respectively 2005, 2007 and 2021. 
 
 ```{r time series, echo=F, warning=F, message=F}
 
@@ -49,17 +61,20 @@ time_series <- niveau.ts %>%
                           y = Wert)) +
   
   labs(title = "Time Series: Water Levels",
+       subtitle = "Daily maximal value",
        caption = "source: niveau.Rdata",
-       x = "Time of Occurrence",
-       y = "Value") 
+       x = "Time of Occurrence [1D]",
+       y = "Value [meter above sea]") 
 
 ggplotly(time_series) %>% config(displayModeBar = F)
 
 ```
 
-## Value Distribution
+# Value Distribution
 
-The following output shows the five-number statistics summary of the water level values. We immediately understand that the values are not symmetrical around the mean but much more tightly grouped on the lefts side of the mean (and the median) than on its right side, indicating that the water level values's distribution is right-skewed. 
+The following output shows the five-number statistics summary of the water level values. 
+
+The summary shows that the water level values are not symmetrical around the mean or the median but much more tightly grouped on the lefts side of the mean (and the median) than on its right side (i.e. more dispersed), indicating that the water levels' distribution is right-skewed. The second observation is that the difference between the minimum and maximum water level is not very large. 
 
 ```{r summary, echo=F, warning=F, message=F}
 
@@ -67,11 +82,13 @@ summary(niveau.ts$Wert)
 
 ```
 
-The below histogram (i.e. frequency distribution) confirms the above observations. Indeed, we see that the data is right-skewed (i.e. non-normal) indicating that the data is disproportionally distributed on the right where water level outliers need to be investigated.     
+The below histogram (i.e. frequency distribution) confirms the above observations. Indeed, we see that the data is right-skewed (i.e. therefore non-normal) indicating that the data is disproportionately distributed on the right where water levels happen to have much higher values than usual (i.e. outliers) that need to be investigated.     
 
-On top of the histogram we add a red curve being the smoothed version of the histogram showing again the shape of the distribution, a purple line indicating the median water level value (value that splits the observation in half) and the average water level in green. 
+The red curve represents the smoothed version of the histogram which reflects more accurately the probability density function of the values. The purple vertical line draws the median water level value, 325.8 meter above sea, and the green vertical line draws the average, 325.9. [ADD THE MODE]
 
-Looking at the positions on the x-axis of the mean and the median [add mode at some point], we see that the mean seems to be a better indication of the center of the distribution. [adapt interpretation when mode is on].
+Looking at the positions on the x-axis of the mean and the median [and the mode] with regard to the distribution, we see that the mean seems to be a better indicator of the center of the distribution. [adapt interpretation when mode is on].
+
+[IMPROVE GRAPH: better color/theme + add legend ]
 
 ```{r histogram, echo=F, warning=F, message=F}
 
@@ -100,12 +117,15 @@ niveau.ts %>%
              lwd = 1) +
 
   labs(title = "Water Levels Frequencies",
-       x = "Value",
-       y = "Frequency")
+       x = "Water Level Value [meter above sea]",
+       y = "Frequency") +
+  
+  # Adds legend
+  theme(legend.position="right")
 
 ```
 
-## Risk Assessment
+# Risk Assessment
 
 - [peaks-over-threshold method]
 The Peaks-over-Threshold method identifies extreme values that are above a designated threshold u. In order to determine an optimal threshold we will apply the MRL-plot and then look at the distribution of the data points. The value of u above which the plot is approximately linear can generally be selected as the optimal threshold. So,this is what we are going to do to model the high water levels: first we will make a MRL-plot to choose the optimal threshold and then use the Peak-over-Threshold method.
