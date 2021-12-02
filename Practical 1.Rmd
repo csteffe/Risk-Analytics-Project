@@ -127,91 +127,135 @@ niveau.ts %>%
 
 # Risk Assessment
 
-- [peaks-over-threshold method]
+## Peaks-over-Threshold Model
+
 The Peaks-over-Threshold method identifies extreme values that are above a designated threshold u. In order to determine an optimal threshold we will apply the MRL-plot and then look at the distribution of the data points. The value of u above which the plot is approximately linear can generally be selected as the optimal threshold. So,this is what we are going to do to model the high water levels: first we will make a MRL-plot to choose the optimal threshold and then use the Peak-over-Threshold method.
 
-- [clustering of the extremes]
+## Clustering of the extremes
+
 Clusters of the extremes correspond to the clustering of the data points that are above the chosen threshold u.
 Consecutive threshold exceedances are considered to belong to the same cluster.
 In our case, concerning the daily water levels data, by using the Peak-over-Threshold approach we can observe thanks to the plot the different clusters of the extreme values, then we can fit the Generalized Pareto Distribution (GPD) or Point Process Model to the cluster maxima (after declustering if the exceedances exhibit autocorrrelation).
 
 - [drawbacks and advantages of using block maxima method instead ]
 
-
-### Analysis
+# Analysis
 
 ```{r extremes, echo=F, warning=F, message=F}
 
-# Plot mean residual life (MRL)
 library(extRemes)
+
+# Plot mean residual life (MRL)
 extRemes::mrlplot(niveau.ts$Wert)
 
 ```
 
 The threshold could be put at around 326 or 327.
 
-```{r peak-over-threshold, echo=F, warning=F, message=F}
+```{r peaks-over-threshold, echo=F, warning=F, message=F}
 
 threshold <- 327 # 327 as Threshold looks better than 326
 
 # Plot of Peak-over-Threshold
-plot(x = rep(1:7883, each = 1), y = unlist(niveau.ts$Wert), main = "Peak Over Thresholds",
-     sub = paste("threshold =", threshold), xlab = "series", ylab = "value")
+plot(x = rep(1:7883, each = 1), 
+     y = unlist(niveau.ts$Wert), 
+     main = "Peak Over Thresholds",
+     sub = paste("threshold =", threshold), 
+     xlab = "series", 
+     ylab = "value")
+
 pot_points <- unlist(niveau.ts$Wert) > threshold
-points(x = rep(1:7883, each = 1)[pot_points], y = unlist(niveau.ts$Wert)[pot_points], col = "red")
+
+points(x = rep(1:7883, each = 1)[pot_points], 
+       y = unlist(niveau.ts$Wert)[pot_points], 
+       col = "red")
+
 abline(h = threshold, col = "red")
 
 ```
 
-Decluster 
-```{r}
-decluster <- decluster(niveau$Wert, threshold = 327)
+```{r decluster, echo=F, warning=F, message=F}
+
+# Decluster 
+decluster <- decluster(niveau$Wert, 
+                       threshold = 327)
+
 summary(decluster)
+
 plot(decluster)
+
 ```
 
-Log return
+```{r log return, echo=F, warning=F, message=F}
 
-```{r}
+# Log return
 ret <- diff(log(niveau.ts$Wert))
 
+plot(niveau.ts$Zeitpunkt_des_Auftretens[-1],
+     100*ret,
+     type ="l",
+     main = "log return over time",
+     xlab ="Time",
+     ylab ="log return in %",
+     col = 1)
 
-plot(niveau.ts$Zeitpunkt_des_Auftretens[-1],100*ret,type="l",main = "log return over time",xlab="Time",ylab="log return in %",col=1)
-points(niveau.ts$Zeitpunkt_des_Auftretens[-1],100*ret,col=2,cex=0.1)
+points(niveau.ts$Zeitpunkt_des_Auftretens[-1],
+       100*ret,
+       col = 2,
+       cex = 0.1)
+
 ```
-
 
 ### GPD: 1st way of using Peak-over-Threshold data
-```{r}
+
+```{r GPD, echo=F, warning=F, message=F}
+
 # GPD: 1st way of using Peak-over-Threshold data
-gpd <- fevd(unlist(niveau.ts$Wert), threshold = threshold, type = "GP")
-plot(gpd, type = "density", main = "Empirical POT vs estimated GPD")
+gpd <- fevd(unlist(niveau.ts$Wert), 
+            threshold = threshold, 
+            type = "GP")
+
+plot(gpd, 
+     type = "density", 
+     main = "Empirical POT vs estimated GPD")
 
 ```
-
 
 ### Return Level with GDP
-```{r}
+
+```{r return level, echo=F, warning=F, message=F}
+
 # Plot of the Return Level
-plot(gpd, type = "rl", main = "Return level")
+plot(gpd, 
+     type = "rl", 
+     main = "Return level")
 
 ```
-
 
 ### Point Process Model: 2nd way of using Peak-over-Threshold data
-```{r}
-pt_pro <- fevd(unlist(niveau.ts$Wert), threshold = threshold, type = "PP")
-plot(pt_pro, type = "density", main = "Empirical POT vs Point Process")
+
+```{r point process, echo=F, warning=F, message=F}
+
+pt_pro <- fevd(unlist(niveau.ts$Wert), 
+               threshold = threshold, 
+               type = "PP")
+
+plot(pt_pro, 
+     type = "density", 
+     main = "Empirical POT vs Point Process")
 
 ```
-
 
 ### Return Level with Point Process Level
-```{r}
+```{r return level with point process, echo=F, warning=F, message=F}
+
 # Plot of the Return Level
-plot(pt_pro, type = "rl", main = "Return level")
+plot(pt_pro, 
+     type = "rl", 
+     main = "Return level")
+
 ```
 
-### 50-Year Events
+## 50-Year Events
 
-### 100-Year Events
+## 100-Year Events
