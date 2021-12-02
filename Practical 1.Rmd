@@ -34,7 +34,7 @@ niveau.ts <- niveau %>%
 
 The below plot shows the evolution of water levels over 21 years from 01-01-2000 to 01-08-2021. 
 
-First, we observe a pattern indicating that water levels fluctuate a lot (i.e. large difference between peaks and troughs) in a year (i.e. seasonality?). Moreover, we observe that the highest peaks were mainly observed in the Summer months with the highest peaks recorded on 09-06-2007 at 329.323 [add unit of measurement], on 25-08-2005 at 328.827 [add unit] and on 14-07-2021 at 328.622 [add unit]. 
+First, we observe a pattern indicating that water levels fluctuate a lot within a year (i.e. seasonality?). Second, we see that the lowest troughs are quite constant over the years (~325.5) whereas the highest peaks really distinguish themselves among the overall peaks. Indeed, we observe that the highest peaks were mainly observed in the Summer months with the highest peaks recorded on 25-08-2005 at 328.827 [add unit], on 09-06-2007 at 329.323 [add unit of measurement] and on 14-07-2021 at 328.622 [add unit]. Therefore, over 21 years three years have had extremely and unusually high water levels during the summer, respectively 2005, 2007 and 2021. 
 
 ```{r time series, echo=F, warning=F, message=F}
 
@@ -47,6 +47,7 @@ time_series <- niveau.ts %>%
                           y = Wert)) +
   
   labs(title = "Time Series: Water Levels",
+       caption = "source: niveau.Rdata",
        x = "Time of Occurrence",
        y = "Value") 
 
