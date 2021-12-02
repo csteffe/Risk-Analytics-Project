@@ -15,6 +15,53 @@ data -> $x_1, .., x_n$ -> cross validation for the risk measure -> split data se
 
 the normal distribution would ten dto underestmate the value at risk/risk we we'd compare our value at risk with the quantile of the normal distribution !
 
+Module 5: multivariate risk
+
+It matters because the risks happen together (risks are dependent)
+
+We can see an eliptical behavior of the joint distribution of for example return. There can be upper tail dependence (linear correlation on the top left of the plot = upper quadrant => upper tail dependence)
+
+Joint df: distribution of the random vector 
+
+Multivariate models: marginal distrbution -> consider the dependence of the risk, if independence then the joint distribution is = the product of the two probabilities -> densities: joint densities -> if independence look at the formula of the distributions 
+
+Multivariate normal distribution -> check formula in the slide
+
+Bivariate normal data: look at the shape on the slides (if correaltion = 0 -> no correlation so independence, if < 0 negative dependence, if > 0 dependence) : what does the bulk of the distribution looks like ? 
+
+motivation for looking at the extremes that happen jointly: see the slide 
+
+extremes for 2 variables: at least x1 or x2 are extremes or both -> means it is under an extreme situation -> extreme value theory: define a coefficient that measures how much dependence/data we have in the top righ of the data plotted = upper quadrant -> upper tial coefficient: packages in R estimate it for us or we can do it ourselves using one of the formulas from the slides -> if coeff is close to 1 it means that the tail is 0 
+
+no dependence in the bulk of the distribution but dependence in the tail -> tail dependence or extremal dependence: when we go far in the tail, what is the proba that y if above the threshold considering that x is already past the threshold = proba that y is in the upper quadrant (upper tail dependence)
+
+tail dependence: if extreme for x1 (low rank) not extreme for x2 (high rank) and vice versa and lambdy_mu is 0
+
+Module 6: measure the tail dependence = how dependent are for example the two log returns ? 
+
+testing for multivariate normality: R provide a function for this to asses if the multivariate normal distribution is adequate to our data -> does it fit well supposing that the two margins are normal -> use a qqplot or a Jarque Bera test -> for the joint normality we can sue the it is chi-squared sitrbibuted using a qqplot  or a test
+
+important becasue if we fit bivariate normal distribution when it should not be used, we would see that the level of tails wont fit well-> it would fit well for the body of the data but not the tail 
+
+S shape of the qqplot shows that the normal distribution works well for the bulk of the data but not the tail -> the S shape is the departure from the normality
+
+calculating risk: interest about the tail of the distribution -> consider the tail dependence 
+
+multivariate t distribution: bit better because heavy tail distribution -> when there is a covariance matrice sigma it means that it is an eliptical distrbution because the elipse depends on the covariance matrix -> compare elipse with true distribution of the data to check which distribution fits well the data 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
