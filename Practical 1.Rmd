@@ -48,7 +48,9 @@ head(niveau.ts, 6) %>%
 
 The below plot shows the evolution of water levels over 21 years from 01-01-2000 to 01-08-2021. 
 
-First, we observe a pattern indicating that water levels fluctuate a lot within a year (i.e. seasonality?). Second, we see that the lowest troughs are quite constant over the years (~325.5 meter above sea level) whereas the highest peaks really distinguish themselves among the overall peaks. Indeed, we observe that peaks are mainly observed in the Summer months with the highest peaks recorded on 25-08-2005 at 328.827 (m.a.s.l), on 09-06-2007 at 329.323 (m.a.s.l) and on 14-07-2021 at 328.622 (m.a.s.l). Therefore, over 21 years three years have had extremely and unusually high water levels during the summer, respectively 2005, 2007 and 2021. 
+We see that the lowest troughs are quite constant over the years (~325.5 meter above sea level) whereas the highest peaks really distinguish themselves among the overall peaks. [SHOULD WE THEN REMOVE THE WEIRD THREE VALUES ?] Indeed, we observe that peaks are mainly observed in the Summer months with the highest peaks recorded on 25-08-2005 at 328.827 (m.a.s.l), on 09-06-2007 at 329.323 (m.a.s.l) and on 14-07-2021 at 328.622 (m.a.s.l). Therefore, over 21 years three years have had extremely and unusually high water levels during the summer, respectively 2005, 2007 and 2021. 
+
+We also observe a pattern of the maxima shown by the green smoothed curve which indicates that water levels fluctuate according to a specific logic within a year (i.e. trend and seasonality?). 
 
 ```{r time series, echo=F, warning=F, message=F}
 
@@ -57,18 +59,19 @@ library(plotly)
 # Plot the time series
 time_series <- niveau.ts %>% 
   ggplot(mapping = aes(x = Zeitpunkt_des_Auftretens, 
-                          y = Wert)) + 
+                       y = Wert)) + 
   geom_line() +
   
+  # Add the smoothed trend
   stat_smooth(color = "green") +
   
-  labs(title = "Daily Water Levels (m.a.s.l) in Stilli",
-       subtitle = "Daily maximal value",
-       caption = "source: niveau.Rdata",
+  labs(title = "Daily Maximum Water Levels (m.a.s.l) in Stilli",
+       caption = "source: niveau.Rdata", # [the caption doesn't appear !!!]
        x = "Time of Occurrence [1D]", 
        y = "Water Level Values [m.a.s.l]") 
 
-ggplotly(time_series) %>% config(displayModeBar = F)
+ggplotly(time_series) %>% 
+  config(displayModeBar = F)
 
 ```
 
