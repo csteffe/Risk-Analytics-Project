@@ -138,7 +138,9 @@ The objective behind the EVA is to find valid estimates of the frequency (expres
 
 ## Peak-Over-Threshold (POT) Method
 
-The **Peaks-over-Threshold** method identifies values that are high enough to be above a designated threshold $\mu$, to show the extremes (i.e. highest values). In order to determine an optimal threshold, we apply the **MRL-plot** and then look at the distribution of the data points [exceeding the threshold right ?]. [The number of exceedances arise according to a *Poisson* distribution with parameter lambda (i.e. probability of getting an exceedance)]. 
+The **Peak-Over-Threshold** method provides a model for independent exceedances (i.e. extreme values) above a large threshold. Therefore, it identifies values that are **high enough** to be above a designated threshold $\mu$, above which we consider are the extremes (i.e. highest values). 
+
+In order to determine an optimal threshold, we apply the **MRL-plot** and then look at the distribution of the exceedances. [The number of exceedances arise according to a **Poisson** distribution with parameter lambda (i.e. probability of getting an exceedance) ? + We assume that exceedances are **independent** (i.e. no auto-correlation?), **identically distributed** (i.e. are random variables) and their distribution is **asymptotic**. ? ]. 
 
 The value of $\mu$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. [not sure I understand this sentence] Therefore, to model the high water levels, we first proceed to an MRL-plot to choose the optimal threshold $\mu$ and then, we use the Peaks-over-Threshold method [we look at the distribution of the exceedances to assess their probability of occurrence].
 
@@ -150,6 +152,8 @@ In our case, concerning the daily water levels data, by using the Peak-over-Thre
 - [drawbacks and advantages of using block maxima method instead ]
 
 ## Analysis
+
+### Threshold Selection
 
 First, we start by selecting an appropriate threshold $\mu$ to use for fitting the GPD or point process models. To do so, we use the *mrlplot()* function from the **extRemes** package which plots the potential thresholds against the mean excess.
 
@@ -178,17 +182,23 @@ extRemes::mrlplot(niveau.ts$Wert,)
 
 ```
 
+### POT
+
+The below plot shows the results of the Peak-Over-Treshol method. The red line represents the designated appropriate threshold $\mu = 327\ [m.a.s.l]$ and the red dots are the extreme daily water level maxima recorded, considered as exceedances. 
+
 ```{r peaks-over-threshold, echo=F, warning=F, message=F}
 
+# Assign the threshold value to a threshold object 
 threshold <- 327 # 327 as Threshold looks better than 326
 
 # Plot of Peak-over-Threshold
-plot(x = rep(1:7883, each = 1), 
-     y = unlist(niveau.ts$Wert), 
-     main = "Peaks Over Thresholds",
-     sub = paste("threshold =", threshold), 
-     xlab = "series", 
-     ylab = "Water Level Values")
+pot <- plot(x = rep(1:7883, 
+                    each = 1), 
+            y = unlist(niveau.ts$Wert), 
+            main = "Peaks over Threshold",
+            sub = paste("threshold =", threshold), 
+            xlab = "series", 
+            ylab = "Threshold")
 
 pot_points <- unlist(niveau.ts$Wert) > threshold
 
@@ -196,7 +206,10 @@ points(x = rep(1:7883, each = 1)[pot_points],
        y = unlist(niveau.ts$Wert)[pot_points], 
        col = "red")
 
-abline(h = threshold, col = "red")
+abline(h = threshold, col = "red") 
+
+#ggplotly(pot) %>% 
+  #config(displayModeBar = F)   [CAN WE MAKE THIS PLOT INTERACTIVE ?]
 
 ```
 
@@ -220,10 +233,12 @@ labs(title = "Declustering of exceedances",
 
 ```
 
+[This plot should look like the one on slide 6 from module 3]
+
 ```{r log return, echo=F, warning=F, message=F}
 
 # Log return
-ret <- diff(log(niveau.ts$Wert))
+ret <- diff(log(niveau.ts$Wert)) #[Here we need to use the exceedances not niveau.ts I think]
 
 plot(niveau.ts$Zeitpunkt_des_Auftretens[-1],
      100*ret,
@@ -240,7 +255,7 @@ points(niveau.ts$Zeitpunkt_des_Auftretens[-1],
 
 ```
 
-## GPD
+## Generalized Pareto Distribution (GPD)
 
 ```{r GPD, echo=F, warning=F, message=F}
 
