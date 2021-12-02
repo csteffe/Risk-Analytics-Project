@@ -148,7 +148,9 @@ In our case, concerning the daily water levels data, by using the Peak-over-Thre
 library(extRemes)
 
 # Plot mean residual life (MRL)
-extRemes::mrlplot(niveau.ts$Wert)
+extRemes::mrlplot(niveau.ts$Wert,) 
+#+ labs(title = "Mean Residual Life Plot",
+       #caption = "source: niveau.Rdata")
 
 ```
 
@@ -161,10 +163,10 @@ threshold <- 327 # 327 as Threshold looks better than 326
 # Plot of Peak-over-Threshold
 plot(x = rep(1:7883, each = 1), 
      y = unlist(niveau.ts$Wert), 
-     main = "Peak Over Thresholds",
+     main = "Peaks Over Thresholds",
      sub = paste("threshold =", threshold), 
      xlab = "series", 
-     ylab = "value")
+     ylab = "Water Level Values")
 
 pot_points <- unlist(niveau.ts$Wert) > threshold
 
@@ -176,15 +178,23 @@ abline(h = threshold, col = "red")
 
 ```
 
+Declustering: rendre indépendentes les unes des autres les exceedances (i.e. data points above the threshold)
+-> we want to decluster to water level values above 327 meter above sea.
+
 ```{r decluster, echo=F, warning=F, message=F}
 
 # Decluster 
-decluster <- decluster(niveau$Wert, 
-                       threshold = 327)
+decluster <- extRemes::decluster(niveau$Wert, 
+                                 threshold = 327)
 
-summary(decluster)
+decluster
 
-plot(decluster)
+#summary(decluster) 
+
+plot(decluster) +
+labs(title = "Declustering of exceedances",
+     caption = "source: niveau.Rdata",
+     y = "Water Level Values")
 
 ```
 
@@ -199,7 +209,7 @@ plot(niveau.ts$Zeitpunkt_des_Auftretens[-1],
      main = "log return over time",
      xlab ="Time",
      ylab ="log return in %",
-     col = 1)
+     col = 1) +
 
 points(niveau.ts$Zeitpunkt_des_Auftretens[-1],
        100*ret,
@@ -208,14 +218,14 @@ points(niveau.ts$Zeitpunkt_des_Auftretens[-1],
 
 ```
 
-### GPD: 1st way of using Peak-over-Threshold data
+## GPD
 
 ```{r GPD, echo=F, warning=F, message=F}
 
 # GPD: 1st way of using Peak-over-Threshold data
-gpd <- fevd(unlist(niveau.ts$Wert), 
-            threshold = threshold, 
-            type = "GP")
+gpd <- extRemes::fevd(unlist(decluster), 
+                      threshold = threshold, 
+                      type = "GP")
 
 plot(gpd, 
      type = "density", 
@@ -223,9 +233,9 @@ plot(gpd,
 
 ```
 
-### Return Level with GDP
+```{r return level with GDP, echo=F, warning=F, message=F}
 
-```{r return level, echo=F, warning=F, message=F}
+# [Make sure its in yearly terms + return level for 50-year AND 100-year]
 
 # Plot of the Return Level
 plot(gpd, 
@@ -234,10 +244,11 @@ plot(gpd,
 
 ```
 
-### Point Process Model: 2nd way of using Peak-over-Threshold data
+## Point Process Model
 
 ```{r point process, echo=F, warning=F, message=F}
 
+# Point Process Model: 2nd way of using Peak-over-Threshold data
 pt_pro <- fevd(unlist(niveau.ts$Wert), 
                threshold = threshold, 
                type = "PP")
@@ -248,7 +259,6 @@ plot(pt_pro,
 
 ```
 
-### Return Level with Point Process Level
 ```{r return level with point process, echo=F, warning=F, message=F}
 
 # Plot of the Return Level
@@ -258,6 +268,3 @@ plot(pt_pro,
 
 ```
 
-## 50-Year Events
-
-## 100-Year Events
