@@ -131,7 +131,7 @@ niveau.ts %>%
 
 The **Peaks-over-Threshold** method identifies values that are high enough to be above a designated threshold $\mu$, to show the extremes (i.e. highest values). In order to determine an optimal threshold, we apply the **MRL-plot** and then look at the distribution of the data points [exceeding the threshold right ?]. [The number of exceedances arise according to a *Poisson* distribution with parameter lambda (i.e. probability of getting an exceedance)]. 
 
-The value of $\mu$ above which the plot is approximately linear can generally be selected as the optimal threshold. [not sure I understand this sentence] Therefore, to model the high water levels, we first proceed to an MRL-plot to choose the optimal threshold $\mu$ and then, we use the Peak-over-Threshold method [we look at the distribution of the exceedances to assess their probability of occurrence].
+The value of $\mu$ above which the plot is approximately linear can generally be selected as the optimal threshold. [not sure I understand this sentence] Therefore, to model the high water levels, we first proceed to an MRL-plot to choose the optimal threshold $\mu$ and then, we use the Peaks-over-Threshold method [we look at the distribution of the exceedances to assess their probability of occurrence].
 
 ## Clustering of the extremes
 
