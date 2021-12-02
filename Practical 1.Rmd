@@ -32,11 +32,14 @@ niveau.ts <- niveau %>%
 
 ## Time Series: Water Levels
 
-The below plot shows the evolution of water level over 21 years, from January 1st 2000 to August 1st 2021. The highest peaks have mainly been observed in the summer months, with the highest peaks recorded occuring in August 9th 2007 at 329.323, August 25th 2005 at 328.827, and in July 14th 2021 at a value of 328.622
+The below plot shows the evolution of water levels over 21 years from 01-01-2000 to 01-08-2021. 
+
+First, we observe a pattern indicating that water levels fluctuate a lot (i.e. large difference between peaks and troughs) in a year (i.e. seasonality?). Moreover, we observe that the highest peaks were mainly observed in the Summer months with the highest peaks recorded on 09-06-2007 at 329.323 [add unit of measurement], on 25-08-2005 at 328.827 [add unit] and on 14-07-2021 at 328.622 [add unit]. 
 
 ```{r time series, echo=F, warning=F, message=F}
 
 library(plotly)
+
 # Plot the time series
 time_series <- niveau.ts %>% 
   ggplot() + 
