@@ -116,15 +116,8 @@ In our case, concerning the daily water levels data, by using the Peak-over-Thre
 ```{r}
 
 # Plot mean residual life (MRL)
-library(ismev)
-mrl.plot(niveau.ts$Wert)
-
-# Plot MRL with ggplot
-# library(ggplot2)
-# m %>% ggplot() +
-     # labs(title = "Mean Residual Life Plot",
-     # x = "Threshold",
-     #  y = "Mean Excess") 
+library(extRemes)
+extRemes::mrlplot(niveau.ts$Wert)
 
 ```
 The threshold could be put at around 326 or 327.
@@ -132,8 +125,6 @@ The threshold could be put at around 326 or 327.
 
 
 ```{r}
-
-library(extRemes)
 
 threshold <- 327 # 327 as Threshold looks better than 326
 
