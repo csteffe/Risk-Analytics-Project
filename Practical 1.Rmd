@@ -50,7 +50,7 @@ The below plot shows the evolution of water levels over 21 years from 01-01-2000
 
 We see that the lowest troughs are quite constant over the years (~325.5 meter above sea level) whereas the highest peaks really distinguish themselves among the overall peaks. [SHOULD WE THEN REMOVE THE WEIRD THREE VALUES ?] Indeed, we observe that peaks are mainly observed in the Summer months with the highest peaks recorded on 25-08-2005 at 328.827 (m.a.s.l), on 09-06-2007 at 329.323 (m.a.s.l) and on 14-07-2021 at 328.622 (m.a.s.l). Therefore, over 21 years three years have had extremely and unusually high water levels during the summer, respectively 2005, 2007 and 2021. 
 
-We also observe a pattern of the maxima shown by the green smoothed curve which indicates that water levels fluctuate according to a specific logic within a year (i.e. trend and seasonality?). 
+We also observe a pattern of the maxima shown by the green smoothed curve which indicates that water levels fluctuate according to a specific logic within a year (i.e. trend and seasonality?). [How can we assess an homogeneity issue because of a trend ?]
 
 ```{r time series, echo=F, warning=F, message=F}
 
@@ -75,7 +75,7 @@ ggplotly(time_series) %>%
 
 ```
 
-# Value Distribution
+# Daily Water Level Maxima Distribution
 
 The following output shows the five-number statistics summary of the water level values. 
 
@@ -130,32 +130,47 @@ niveau.ts %>%
 
 ```
 
-# Risk Assessment
+# Extreme Value Analysis (EVA)
+
+The objective behind the EVA is to find valid estimates of the frequency (expressed as a return period) of extreme water levels maxima. -> return level is the output 
+
+[Add assumptions about observed extreme values from the theory]
 
 ## Peak-Over-Threshold (POT) Method
 
 The **Peaks-over-Threshold** method identifies values that are high enough to be above a designated threshold $\mu$, to show the extremes (i.e. highest values). In order to determine an optimal threshold, we apply the **MRL-plot** and then look at the distribution of the data points [exceeding the threshold right ?]. [The number of exceedances arise according to a *Poisson* distribution with parameter lambda (i.e. probability of getting an exceedance)]. 
 
-The value of $\mu$ above which the plot is approximately linear can generally be selected as the optimal threshold. [not sure I understand this sentence] Therefore, to model the high water levels, we first proceed to an MRL-plot to choose the optimal threshold $\mu$ and then, we use the Peaks-over-Threshold method [we look at the distribution of the exceedances to assess their probability of occurrence].
+The value of $\mu$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. [not sure I understand this sentence] Therefore, to model the high water levels, we first proceed to an MRL-plot to choose the optimal threshold $\mu$ and then, we use the Peaks-over-Threshold method [we look at the distribution of the exceedances to assess their probability of occurrence].
 
 ## Clustering of the extremes
 
-Clusters of the extremes correspond to the clustering of the data points that are above the chosen threshold u.
-Consecutive threshold exceedances are considered to belong to the same cluster.
+Clusters of the extremes correspond to the clustering of the data points that are above the chosen threshold u.Consecutive threshold exceedances are considered to belong to the same cluster.
 In our case, concerning the daily water levels data, by using the Peak-over-Threshold approach we can observe thanks to the plot the different clusters of the extreme values, then we can fit the Generalized Pareto Distribution (GPD) or Point Process Model to the cluster maxima (after declustering if the exceedances exhibit autocorrrelation).
 
 - [drawbacks and advantages of using block maxima method instead ]
 
-# Analysis
+## Analysis
+
+First, we start by selecting an appropriate threshold $\mu$ to use for fitting the GPD or point process models. To do so, we use the *mrlplot()* function from the **extRemes** package which plots the potential thresholds against the mean excess.
+
+The mean excess is calculated by $(mean\ of \ exceedances \ of \ \mu - \mu)$
+
+The difficulty of choosing an adequate threshold $\mu$ lies in the fact that it requires a good balance between selecting a threshold low enough so that we have enough exceedances to obtain useful results (i.e. results precision) but high enough so that the GPD and point process methods are approximately valid (i.e. bias). 
+
+[Notes for ourselves in case of a question: "If we take the threshold to be so low that most of the data are exceedances then the analysis will only be valid if the raw data came from a generalised Pareto distribution (which will rarely be the case)"]
+
+The below **Mean Residual Life Plot** indicates for each potential threshold $\mu$ its mean excess. As mentioned previously, the value of $\mu$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. From the plot, we therefore decide to choose a threshold $\mu = 327\ [m.a.s.l]$. 
 
 ```{r extremes, echo=F, warning=F, message=F}
 
 library(extRemes)
 
-# Plot mean residual life (MRL)
+# Mean Residual Life Plot (MRLP)
 extRemes::mrlplot(niveau.ts$Wert,) 
 #+ labs(title = "Mean Residual Life Plot",
        #caption = "source: niveau.Rdata")
+
+# [ADD A VERTICAL LINE AT 327 TO SHOW THE DIFFERENCE OF THE LINE FROM CURVE TO LINEAR!]
 
 ```
 
