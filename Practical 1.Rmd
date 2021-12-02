@@ -157,9 +157,13 @@ The mean excess is calculated by $(mean\ of \ exceedances \ of \ \mu - \mu)$
 
 The difficulty of choosing an adequate threshold $\mu$ lies in the fact that it requires a good balance between selecting a threshold low enough so that we have enough exceedances to obtain useful results (i.e. results precision) but high enough so that the GPD and point process methods are approximately valid (i.e. bias). 
 
-[Notes for ourselves in case of a question: "If we take the threshold to be so low that most of the data are exceedances then the analysis will only be valid if the raw data came from a generalised Pareto distribution (which will rarely be the case)"]
+[Notes for ourselves in case of a question: "If we take the threshold to be so low that most of the data are exceedances then the analysis will only be valid if the raw data came from a generalized Pareto distribution (which will rarely be the case)"]
 
-The below **Mean Residual Life Plot** indicates for each potential threshold $\mu$ its mean excess. As mentioned previously, the value of $\mu$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. From the plot, we therefore decide to choose a threshold $\mu = 327\ [m.a.s.l]$. 
+The below **Mean Residual Life Plot** indicates for each potential threshold $\mu$ its mean excess. As mentioned previously, the value of $\mu$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. The dashed curves represent the confidence intervals of the mean excesses which help assess its type (i.e. constant, linear). Therefore, we decide to choose a threshold $\mu = 327\ [m.a.s.l]$ form which the curve seems to become more linear.
+
+From now on, daily water level maxima above $327\ [m.a.s.l]$ are considered exceedances/extreme values/outliers [quel est le meilleur terme?]. 
+
+[Notes for ourselves: below 327 a threshold would be too low for the assumptions of the extreme value approach to be valid and above 328 would be too high to obtain insghtful results because of too few data]
 
 ```{r extremes, echo=F, warning=F, message=F}
 
@@ -173,8 +177,6 @@ extRemes::mrlplot(niveau.ts$Wert,)
 # [ADD A VERTICAL LINE AT 327 TO SHOW THE DIFFERENCE OF THE LINE FROM CURVE TO LINEAR!]
 
 ```
-
-The threshold could be put at around 326 or 327.
 
 ```{r peaks-over-threshold, echo=F, warning=F, message=F}
 
