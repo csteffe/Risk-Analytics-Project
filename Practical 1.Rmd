@@ -1,18 +1,17 @@
 ---
 title: "Practical 1: High Water Levels"
 author: "Colin Steffe, Virany Kho, Jasmine Mawjee, Adela Sahraoui"
-date: "`r Sys.Date()`"
-output: pdf_document
+output: html_document
 ---
 
-```{r}
+```{r upload data, echo=F, warning=F, message=F}
 
 # Read in the data
 load(file = here::here("niveau.Rdata"))
 
 ```
 
-```{r}
+```{r tsibble, echo=F, warning=F, message=F}
 
 library(lubridate)
 library(tibble)
@@ -35,7 +34,7 @@ niveau.ts <- niveau %>%
 
 The below plot shows the evolution of water level over 21 years, from January 1st 2000 to August 1st 2021. The highest peaks have mainly been observed in the summer months, with the highest peaks recorded occuring in August 9th 2007 at 329.323, August 25th 2005 at 328.827, and in July 14th 2021 at a value of 328.622
 
-```{r}
+```{r time series, echo=F, warning=F, message=F}
 
 library(plotly)
 # Plot the time series
@@ -51,11 +50,12 @@ time_series <- niveau.ts %>%
 ggplotly(time_series) %>% config(displayModeBar = F)
 
 ```
+
 ## Value Distribution
 
 The below output shows the five-number statistics summary of the water level values. We immediately understand that the values are not symmetrical around the mean but much more tightly grouped on the lefts side of the mean (and the median) than on its right side, indicating that the water level values's distribution is right-skewed. 
 
-```{r, echo=F, warning=F, message=F}
+```{r summary, echo=F, warning=F, message=F}
 
 summary(niveau.ts$Wert)
 
@@ -67,7 +67,8 @@ On top of the histogram we add a red curve being the smoothed version of the his
 
 Looking at the positions on the x-axis of the mean and the median [add mode at some point], we see that the mean seems to be a better indication of the center of the distribution. [adapt interpretation when mode is on].
 
-```{r, echo=F, warning=F, message=F}
+```{r histogram, echo=F, warning=F, message=F}
+
 # Histogram
 niveau.ts %>% 
   ggplot() + 
@@ -113,18 +114,17 @@ In our case, concerning the daily water levels data, by using the Peak-over-Thre
 
 ### Analysis
 
-```{r}
+```{r extremes, echo=F, warning=F, message=F}
 
 # Plot mean residual life (MRL)
 library(extRemes)
 extRemes::mrlplot(niveau.ts$Wert)
 
 ```
+
 The threshold could be put at around 326 or 327.
 
-
-
-```{r}
+```{r peak-over-threshold, echo=F, warning=F, message=F}
 
 threshold <- 327 # 327 as Threshold looks better than 326
 
