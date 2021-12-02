@@ -31,7 +31,7 @@ Bivariate normal data: look at the shape on the slides (if correaltion = 0 -> no
 
 motivation for looking at the extremes that happen jointly: see the slide 
 
-extremes for 2 variables: at least x1 or x2 are extremes or both -> means it is under an extreme situation -> extreme value theory: define a coefficient that measures how much dependence/data we have in the top righ of the data plotted = upper quadrant -> upper tial coefficient: packages in R estimate it for us or we can do it ourselves using one of the formulas from the slides -> if coeff is close to 1 it means that the tail is 0 
+extremes for 2 variables: at least x1 or x2 are extremes or both -> means it is under an extreme situation -> extreme value theory: define a coefficient that measures how much dependence/data we have in the top righ of the data plotted = upper quadrant -> upper tial coefficient: packages in R estimate it for us or we can do it ourselves using one of the formulas from the slides -> if coeff is close to 1 it means that the tail is 0 -> asymptotic dependence? -> largest lambda = largest tail 
 
 no dependence in the bulk of the distribution but dependence in the tail -> tail dependence or extremal dependence: when we go far in the tail, what is the proba that y if above the threshold considering that x is already past the threshold = proba that y is in the upper quadrant (upper tail dependence)
 
