@@ -163,6 +163,22 @@ abline(h = threshold, col = "red")
 
 ```
 
+Decluster 
+```{r}
+decluster <- decluster(niveau$Wert, threshold = 327)
+summary(decluster)
+plot(decluster)
+```
+
+Log return
+
+```{r}
+ret <- diff(log(niveau.ts$Wert))
+
+
+plot(niveau.ts$Zeitpunkt_des_Auftretens[-1],100*ret,type="l",main = "log return over time",xlab="Time",ylab="log return in %",col=1)
+points(niveau.ts$Zeitpunkt_des_Auftretens[-1],100*ret,col=2,cex=0.1)
+```
 
 ### 50-Year Events
 
