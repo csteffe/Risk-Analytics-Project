@@ -133,7 +133,7 @@ The Peaks-over-Threshold method identifies extreme values that are above a desig
 - [clustering of the extremes]
 Clusters of the extremes correspond to the clustering of the data points that are above the chosen threshold u.
 Consecutive threshold exceedances are considered to belong to the same cluster.
-In our case, concerning the daily water levels data, by using the Peak-over-Threshold approach we can observe thanks to the plot the different clusters of the extreme values, then we can fit the Generalized Pareto Distribution (GPD) to the cluster maxima (after declustering if the exceedances exhibit autocorrrelation).
+In our case, concerning the daily water levels data, by using the Peak-over-Threshold approach we can observe thanks to the plot the different clusters of the extreme values, then we can fit the Generalized Pareto Distribution (GPD) or Point Process Model to the cluster maxima (after declustering if the exceedances exhibit autocorrrelation).
 
 - [drawbacks and advantages of using block maxima method instead ]
 
@@ -178,6 +178,38 @@ ret <- diff(log(niveau.ts$Wert))
 
 plot(niveau.ts$Zeitpunkt_des_Auftretens[-1],100*ret,type="l",main = "log return over time",xlab="Time",ylab="log return in %",col=1)
 points(niveau.ts$Zeitpunkt_des_Auftretens[-1],100*ret,col=2,cex=0.1)
+```
+
+
+### GPD: 1st way of using Peak-over-Threshold data
+```{r}
+# GPD: 1st way of using Peak-over-Threshold data
+gpd <- fevd(unlist(niveau.ts$Wert), threshold = threshold, type = "GP")
+plot(gpd, type = "density", main = "Empirical POT vs estimated GPD")
+
+```
+
+
+### Return Level with GDP
+```{r}
+# Plot of the Return Level
+plot(gpd, type = "rl", main = "Return level")
+
+```
+
+
+### Point Process Model: 2nd way of using Peak-over-Threshold data
+```{r}
+pt_pro <- fevd(unlist(niveau.ts$Wert), threshold = threshold, type = "PP")
+plot(pt_pro, type = "density", main = "Empirical POT vs Point Process")
+
+```
+
+
+### Return Level with Point Process Level
+```{r}
+# Plot of the Return Level
+plot(pt_pro, type = "rl", main = "Return level")
 ```
 
 ### 50-Year Events
