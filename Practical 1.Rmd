@@ -1,7 +1,14 @@
 ---
 title: "Practical 1: High Water Levels"
 author: "Colin Steffe, Virany Kho, Jasmine Mawjee, Adela Sahraoui"
-output: html_document
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: united
+    highlight: tango
+    toc: true
+    toc_float: true
+    code_folding: hide
 ---
 
 ```{r upload data, echo=F, warning=F, message=F}
@@ -13,11 +20,13 @@ load(file = here::here("niveau.Rdata"))
 
 ```
 
+Practical 1 aims at analyzing water levels of the longest (i.e. 295km) Swiss river (rises in the Bernese Alps and ends at the junction with the Rhine) at a measuring station in Untersiggenthal next to the Paul Scherrer Institute where nuclear reactors are located, making this location very sensitive in case of flood damage. 
+
 # Data
 
 The next table displays the first six rows of the *niveau* data set. 
 
-The data set collects the Aare's daily maximum water levels in one unique station in Stilli, Untersiggenthal (canton of Aargau) and records the exact times at which daily maximal values are detected. 
+The data set collects the Aare's daily maximum water levels in one unique station in Stilli, Untersiggenthal (canton of Aargau) and records the exact times at which daily maxima are detected. 
 
 ```{r tsibble, echo=F, warning=F, message=F}
 
@@ -44,42 +53,45 @@ head(niveau.ts, 6) %>%
 
 ```
 
-# Time Series: 
+# Time Series
 
-The below plot shows the evolution of water levels over 21 years from 01-01-2000 to 01-08-2021. 
+The below plot shows the evolution of daily water maxima over 21 years from 01-01-2000 to 01-08-2021. 
 
 We see that the lowest troughs are quite constant over the years (~325.5 meter above sea level) whereas the highest peaks really distinguish themselves among the overall peaks. [SHOULD WE THEN REMOVE THE WEIRD THREE VALUES ?] Indeed, we observe that peaks are mainly observed in the Summer months with the highest peaks recorded on 25-08-2005 at 328.827 (m.a.s.l), on 09-06-2007 at 329.323 (m.a.s.l) and on 14-07-2021 at 328.622 (m.a.s.l). Therefore, over 21 years three years have had extremely and unusually high water levels during the summer, respectively 2005, 2007 and 2021. 
 
-We also observe a pattern of the maxima shown by the green smoothed curve which indicates that water levels fluctuate according to a specific logic within a year (i.e. trend and seasonality?). [How can we assess an homogeneity issue because of a trend ?]
+We also observe a pattern of the maxima better shown by the green smoothed curve which indicates that water levels fluctuate according to a specific logic within a year (i.e. seasonality?). [How can we assess an homogeneity issue because of a trend ?] -> if seasonality we need a moving threshold and have two separate modeling ?????? 
 
 ```{r time series, echo=F, warning=F, message=F}
 
 library(plotly)
+library(ggthemes)
 
 # Plot the time series
 time_series <- niveau.ts %>% 
   ggplot(mapping = aes(x = Zeitpunkt_des_Auftretens, 
-                       y = Wert)) + 
+                       y = Wert,)) + 
   geom_line() +
   
   # Add the smoothed trend
-  stat_smooth(color = "green") +
+  stat_smooth(color = "cyan4") +
   
-  labs(title = "Daily Maximum Water Levels (m.a.s.l) in Stilli",
+  labs(title = "Daily Maximum Water Levels (in m.a.s.l) in Stilli",
        caption = "source: niveau.Rdata", # [the caption doesn't appear !!!]
        x = "Time of Occurrence [1D]", 
-       y = "Water Level Values [m.a.s.l]") 
+       y = "Water Level Values [m.a.s.l]")  +
+  
+  theme_economist_white()
 
 ggplotly(time_series) %>% 
   config(displayModeBar = F)
 
 ```
 
-# Daily Water Level Maxima Distribution
+# Daily Water Level Maxima's Distribution
 
 The following output shows the five-number statistics summary of the water level values. 
 
-The summary shows that the water level values are not symmetrical around the mean or the median but much more tightly grouped on the lefts side of the mean (and the median) than on its right side (i.e. more dispersed), indicating that the water levels' distribution is right-skewed. The second observation is that the difference between the minimum and maximum water level is not very large. 
+The summary shows that the water level values are not symmetrical around the mean nor around the median but much more tightly grouped on the left hand side of the mean (and the median) than on its right hand side (i.e. more dispersed), indicating that the water level maxima's distribution is right-skewed. The second observation is that the difference between the minimum and maximum water level is not very large.[INDICATING WHAT ?]
 
 ```{r summary, echo=F, warning=F, message=F}
 
@@ -87,13 +99,12 @@ summary(niveau.ts$Wert)
 
 ```
 
-The below histogram (i.e. frequency distribution) confirms the above observations. Indeed, we see that the data is right-skewed (i.e. therefore non-normal) indicating that the data is disproportionately distributed on the right where water levels happen to have much higher values than usual (i.e. outliers) that need to be investigated.     
+The below histogram (i.e. frequency distribution) confirms the above observations. Indeed, we see that the data is right-skewed (i.e. therefore non-normal) indicating that the data is disproportionately distributed on the right where daily maxima happen to have much higher values than usual (i.e. outliers) that need to be investigated.     
 
-The red curve represents the smoothed version of the histogram which reflects more accurately the probability density function of the values. The purple vertical line draws the median water level value, 325.8 meter above sea, and the green vertical line draws the average, 325.9. [ADD THE MODE]
+The blue curve represents the smoothed version of the histogram which reflects more accurately the probability density function of the values. The dark green vertical line draws the median water level value, 325.8 meter above sea, and the light green vertical line draws the average, 325.9. [ADD THE MODE]
 
-Looking at the positions on the x-axis of the mean and the median [and the mode] with regard to the distribution, we see that the mean seems to be a better indicator of the center of the distribution. [adapt interpretation when mode is on].
+Looking at the positions on the x-axis of the mean and the median [and the mode] with regard to the distribution, we see that the mean seems to be a better indicator of the center of the distribution, eventhough it is not centered around it. 
 
-[IMPROVE GRAPH: better color/theme + add legend ]
 
 ```{r histogram, echo=F, warning=F, message=F}
 
@@ -104,25 +115,29 @@ niveau.ts %>%
                  stat = "count") +
   
   # Adds smoothed version of the histogram
-  geom_density(mapping = aes(Wert), stat = "density", colour = "red") + 
+  geom_density(mapping = aes(Wert), 
+               stat = "density", 
+               colour = "cornflowerblue") + 
   
-  # Adds the mode
-  #geom_vline(xintercept = mode(niveau.ts$Wert),       
-             #col = "blue",
-             #lwd = 1) +
+  theme_economist_white() +
+  
+  # Adds the mode: most occurring value
+  #geom_vline(aes(xintercept = Mode(niveau.ts$Wert)),
+             #col = 'aquamarine2') +
   
   # Adds the mean
   geom_vline(xintercept = mean(niveau.ts$Wert),       
-             col = "green",
+             col = "aquamarine3",
              lwd = 1) +
   
   # Adds the median
   geom_vline(xintercept = median(niveau.ts$Wert),       
-             col = "purple",
+             col = "aquamarine4",
              lwd = 1) +
 
-  labs(title = "Water Levels Frequencies",
-       x = "Water Level Value [meter above sea]",
+  labs(title = "Frequency of daily water level maxima",
+       subtitle = "From 2000 to 2021",
+       x = "Daily water level maxima [meter above sea]",
        y = "Frequency") +
   
   # Adds legend
@@ -132,57 +147,63 @@ niveau.ts %>%
 
 # Extreme Value Analysis (EVA)
 
-The objective behind the EVA is to find valid estimates of the frequency (expressed as a return period) of extreme water levels maxima. -> return level is the output 
+The objective behind the EVA is to find valid estimates of the frequency (expressed as a return period) of extreme water level maxima. -> return level is the output 
 
 [Add assumptions about observed extreme values from the theory]
 
-## Peak-Over-Threshold (POT) Method
+## Procedure
 
-The **Peak-Over-Threshold** method provides a model for independent exceedances (i.e. extreme values) above a large threshold. Therefore, it identifies values that are **high enough** to be above a designated threshold $\mu$, above which we consider are the extremes (i.e. highest values). In order to determine an optimal threshold, we apply the **MRL-plot** and then look at the distribution of the exceedances. 
+### Peak-Over-Threshold (POT) Method
 
-The value of $u$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. [not sure I understand this sentence] Therefore, to model the high water levels, we first proceed to an MRL-plot to choose the optimal threshold $u$ and then, we use the Peaks-over-Threshold method [we look at the distribution of the exceedances to assess their probability of occurrence].
+The **Peak-Over-Threshold** method provides a model for independent exceedances (i.e. extreme values) above a large threshold. Therefore, it identifies values that are **high enough** to be above a designated threshold $\mu$, above which we consider are the extremes (i.e. highest values). In order to determine an optimal threshold, we apply the **MRL-plot** and then look at the distribution of the exceedances. The value of $u$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. 
 
-## Clustering of the extremes
+Therefore, to model the high water levels, we first proceed to an MRL-plot to choose the optimal threshold $u$ and then, we use the Peak-over-Threshold method and look at the distribution of the exceedances to assess their probability of occurrence.
 
-Clusters of the extremes correspond to the clustering of the data points that are above the chosen threshold u.Consecutive threshold exceedances are considered to belong to the same cluster.
-In our case, concerning the daily water levels data, by using the Peak-over-Threshold approach we can observe thanks to the plot the different clusters of the extreme values, then we can fit the Generalized Pareto Distribution (GPD) or Point Process Model to the cluster maxima (after declustering if the exceedances exhibit autocorrrelation).
+### Clustering of the extremes
 
-- [drawbacks and advantages of using block maxima method instead ]
+Clusters of the extremes correspond to the clustering of the data points that are above the chosen threshold $u$.
+
+To measure and deal with clustering of the daily water levels, we consider consecutive threshold exceedances to belong to the same cluster. Therefore, by using the POT approach, we can observe on the Peak-Over-Threshold plot (below) the different clusters of the extreme values. Then, we can fit the Generalized Pareto Distribution (GPD) or Point Process model to the cluster maxima (after declustering if the exceedances exhibit autocorrrelation).
 
 ## Analysis
 
 ### Threshold Selection
 
-First, we start by selecting an appropriate threshold $u$ to use for fitting the GPD or point process models. To do so, we use the *mrlplot()* function from the **extRemes** package which plots the potential thresholds against the mean excess.
+First, we start by selecting an appropriate threshold $u$ to use for fitting the GPD or Point Process models. To do so, we use the *mrlplot()* function from the **extRemes** package which plots the potential thresholds against the mean excess.
 
-The mean excess function $e(u) = E(X - u| X > u)$ is the expected value of the difference between the random variable (i.e. exceedances) and the high threshold (i.e. $u$), knowing that the exceedance is greater than the threshold . [check if translation from algebric expression is correct] And we are interested in finding the distribution of the daily water level maxima that are above the threshold $u$, which is the excess distribution function $F_u(x) = P(X - u \leq x | X > u)$. 
+The mean excess function $e(u) = E(X - u| X > u)$ is the expected value of the excess (i.e. difference between the exceedance and the high threshold (i.e. $u$)), knowing that the exceedance is greater than the threshold. 
 
-The difficulty of choosing an adequate threshold $u$ lies in the fact that it requires a good balance between selecting a threshold low enough so that we have enough exceedances to obtain useful results (i.e. results precision) but high enough so that the GPD and point process methods are approximately valid (i.e. bias). 
+We are interested in finding the distribution of the daily water level maxima that are above the threshold $u$ (i.e. exceedances), which is the excess distribution function $F_u(x) = P(X - u \leq x | X > u)$. 
 
-[Notes for ourselves in case of a question: "If we take the threshold to be so low that most of the data are exceedances then the analysis will only be valid if the raw data came from a generalized Pareto distribution (which will rarely be the case)"]
+The difficulty of choosing an adequate threshold $u$ lies in the fact that it requires a good balance between selecting a threshold low enough so that we have enough exceedances to obtain useful results (i.e. results precision) but high enough so that the GPD and Point Process methods are approximately valid (i.e. bias). 
 
-The below **Mean Residual Life Plot** indicates for each potential threshold $\mu$ its mean excess. As mentioned previously, the value of $u$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. The dashed curves represent the confidence intervals of the mean excesses which help assess its type (i.e. constant, linear). Therefore, we decide to choose a threshold $u = 327\ [m.a.s.l]$ form which the curve seems to become more linear.
+[Notes for ourselves in case of a question: "If we take the threshold to be so low that most of the data are exceedances then the analysis will only be valid if the raw data came from a generalized Pareto distribution (which will rarely be the case) = 80% of consequances (i.e. exceedances) come from 20% of the causes"]
 
-From now on, daily water level maxima above $327\ [m.a.s.l]$ are considered exceedances/extreme values/outliers [quel est le meilleur terme?]. 
+The below **Mean Residual Life Plot** indicates for each potential threshold $u$ its mean excess. As mentioned previously, the value of $u$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. The dashed curves represent the confidence intervals of the mean excesses which help assess its type (i.e. constant, linear). Therefore, we decide to choose a threshold $u = 327\ [m.a.s.l]$ form which the curve seems to become linear.
 
-[Notes for ourselves: below 327 a threshold would be too low for the assumptions of the extreme value approach to be valid and above 328 would be too high to obtain insghtful results because of too few data]
+From now on, daily water level maxima above $327\ [m.a.s.l]$ are considered extreme values. 
+
+Therefore, below $327\ [m.a.s.l]$, a threshold would be too low for the assumptions of the extreme value approach to be valid and above $327\ [m.a.s.l]$ would be too high to obtain insghtful results because of too few data.
+
+Considering that the mean excess function is used to validate a GPD model for the excess distribution, we see that the mean excess function would roughly be a straight line if we could zoom out on the y-axis, we can say that the GPD is a good fit for modelling the exceedances. [ASK PROFESSOR IF WE CAN SAY THAT IT IS ROUGHLY A STRAIGHT LINE ] distribution. 
 
 ```{r extremes, echo=F, warning=F, message=F}
 
 library(extRemes)
 
 # Mean Residual Life Plot (MRLP)
-extRemes::mrlplot(niveau.ts$Wert,) 
-#+ labs(title = "Mean Residual Life Plot",
-       #caption = "source: niveau.Rdata")
-
-# [ADD A VERTICAL LINE AT 327 TO SHOW THE DIFFERENCE OF THE LINE FROM CURVE TO LINEAR!]
+extRemes::mrlplot(niveau.ts$Wert,
+                  main = "Mean Residual Life Plot: Mean Excess Function") 
+  
+# [MAYBE ADD A VERTICAL LINE AT 327]
 
 ```
 
 ### POT
 
-The below plot shows the results of the Peak-Over-Treshol method. The red line represents the designated appropriate threshold $\mu = 327\ [m.a.s.l]$ and the red dots are the extreme daily water level maxima recorded, considered as exceedances. 
+The below plot shows the results of the Peak-Over-Treshold method. The red line represents the designated appropriate threshold $u = 327\ [m.a.s.l]$ and the red dots are the extreme daily water maxima recorded and considered as exceedances. 
+
+[Try theme_economist for the plot]
 
 ```{r peaks-over-threshold, echo=F, warning=F, message=F}
 
@@ -193,9 +214,9 @@ threshold <- 327 # 327 as Threshold looks better than 326
 pot <- plot(x = rep(1:7883, 
                     each = 1), 
             y = unlist(niveau.ts$Wert), 
-            main = "Peaks over Threshold",
+            main = "Peak-Over-Threshold plot: Exceedances",
             sub = paste("threshold =", threshold), 
-            xlab = "series", 
+            xlab = "Observations", 
             ylab = "Threshold")
 
 pot_points <- unlist(niveau.ts$Wert) > threshold
@@ -206,13 +227,18 @@ points(x = rep(1:7883, each = 1)[pot_points],
 
 abline(h = threshold, col = "red") 
 
-#ggplotly(pot) %>% 
+#ggplotly(plot) %>% 
   #config(displayModeBar = F)   [CAN WE MAKE THIS PLOT INTERACTIVE ?]
 
 ```
 
+The POT approach states that the observations above the high threshold $u$ (i.e. red observations above 327 m.a.s.l) are in absolute terms not independent but it states that if they are not consecutive above $u$, they belong to different clusters and therefore are considered independent only if they are at least a certain number of consecutive observations between them.[ASK IF CORRECT ON THRUSDAY]
 
-The Peak-over-Threshold method needs the threshold exceedances (i.e. data points above it) to be independant. As there may be correlation/autocorrelation in the daily water level values, we decided to decluster these data above the chosen threshold (here 327 meter above the sea) to make them independant.
+To avoid dependence between exceedances, we proceed to decluster the observations above the threshold $u$. To do so, the declustering keeps only the highest water level maxima of one cluster as the key representative observation of the cluster. [VERIFY WITH THE PROFESSOR]
+
+The following plot shows that some exceedances above $327 m.a.s.l$ become more transparent and some others remain more visible. The more visible observations represent the 79 observations (one observation per cluster declustered) obtained after the declustering. 
+
+[TRY WITH ANOTHER THEM]
 
 ```{r decluster, echo=F, warning=F, message=F}
 
@@ -224,10 +250,10 @@ decluster
 
 #summary(decluster) 
 
-plot(decluster) +
-labs(title = "Declustering of exceedances",
-     caption = "source: niveau.Rdata",
-     y = "Water Level Values")
+plot(decluster,
+     main = "Declustering of exceedances", # title doesnt appear 
+     ylab ="Water Level Values",
+     xlab = "Observations")
 
 ```
 
@@ -236,14 +262,14 @@ labs(title = "Declustering of exceedances",
 ```{r log return, echo=F, warning=F, message=F}
 
 # Log return
-ret <- diff(log(niveau.ts$Wert)) #[Here we need to use the exceedances not niveau.ts I think]
+ret <- diff(log(niveau.ts$Wert)) 
 
 plot(niveau.ts$Zeitpunkt_des_Auftretens[-1],
      100*ret,
      type ="l",
-     main = "log return over time",
+     main = "Log-returns over time (POT approach)",
      xlab ="Time",
-     ylab ="log return in %",
+     ylab ="Negative log-return in %", # why negative ? 
      col = 1) +
 
 points(niveau.ts$Zeitpunkt_des_Auftretens[-1],
@@ -253,28 +279,42 @@ points(niveau.ts$Zeitpunkt_des_Auftretens[-1],
 
 ```
 
-## Generalized Pareto Distribution (GPD)
+## Methods
 
-Extreme Value theory suggests that GPD is a *natural approximation* of the excess distribution function $F_u(x)$ where $x$ is the excess, so $F_u(x) \approx G_{\xi, \beta}(x)$. [maybe add parameters conditions]
+### Generalized Pareto Distribution (GPD)
 
-Under the assumption that exceedances are **independent** (i.e. no auto-correlation?), **identically distributed** (i.e. are random variables) and their distribution is **asymptotic** (i.e. ?), we fit the GDP model on the daily water level exceedances.  
+The GPD is used to describe statistical properties of excesses. Indeed, Extreme Value theory suggests that GPD is a *natural approximation* of the excess distribution function $F_u(x)$ where $x$ is the excess, so $F_u(x) \approx G_{\xi, \beta}(x)$. [maybe add parameters conditions]
+
+Under the assumption that exceedances are **independent** (i.e. probability of occurrence of one exceedance does not affect the probability of another), **identically distributed** (i.e. are random variables) and their distribution is **asymptotic** (i.e. ?), we fit the GDP model on the daily water level exceedances.  
 
 ```{r GPD, echo=F, warning=F, message=F}
 
-# GPD: 1st way of using Peak-over-Threshold data
+# Fit an extreme value distribution to data 
 gpd <- extRemes::fevd(unlist(decluster), 
                       threshold = threshold, 
-                      type = "GP")
+                      type = "GP") # To corect ! which one should we choose 
 
 plot(gpd, 
      type = "density", 
      main = "Empirical POT vs estimated GPD")
 
 ```
+#### Return Levels (50- and 100-year events)
 
-```{r return level with GDP, echo=F, warning=F, message=F}
+[convert daily into yearly data before return level!!!]
 
-# [Make sure its in yearly terms + return level for 50-year AND 100-year]
+The below output shows the return level estimates for 50-year and 100-year events. [ADD INTERPRETATION]
+
+```{r return levels with GDP, echo=F, warning=F, message=F}
+
+return.level(gpd,
+             return.period = c(50, 100))
+
+```
+
+The below plot shows the return level estimates by return period. [ADD INTERPRETATION]
+
+```{r return levels with GDP plot, echo=F, warning=F, message=F}
 
 # Plot of the Return Level
 plot(gpd, 
@@ -283,12 +323,14 @@ plot(gpd,
 
 ```
 
-## Point Process Model
+### Point Process Model
+
+-> verify + add interpretation + add a little bit of theory 
 
 ```{r point process, echo=F, warning=F, message=F}
 
-# Point Process Model: 2nd way of using Peak-over-Threshold data
-pt_pro <- fevd(unlist(niveau.ts$Wert), 
+# Fit an extreme value distribution to data 
+pt_pro <- fevd(unlist(decluster), 
                threshold = threshold, 
                type = "PP")
 
@@ -298,7 +340,22 @@ plot(pt_pro,
 
 ```
 
-```{r return level with point process, echo=F, warning=F, message=F}
+#### Return Levels (50- and 100-year events)
+
+[convert daily into yearly data before return level!!!]
+
+The below output shows the return level estimates for 50-year and 100-year events. [ADD INTERPRETATION]
+
+```{r return levels with PP, echo=F, warning=F, message=F}
+
+return.level(gpd,
+             return.period = c(50, 100))
+
+```
+
+The below plot shows the return level estimates by return period. [ADD INTERPRETATION]
+
+```{r return level with PP plot, echo=F, warning=F, message=F}
 
 # Plot of the Return Level
 plot(pt_pro, 
