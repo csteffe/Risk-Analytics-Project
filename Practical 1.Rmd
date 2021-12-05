@@ -363,4 +363,6 @@ plot(pt_pro,
      main = "Return level")
 
 ```
+## Block Maxima Approach 
 
+- Explain the drawbacks and advantages of using a block maxima method instead of the one used in c)-e).
