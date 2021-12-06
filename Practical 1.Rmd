@@ -238,7 +238,7 @@ To avoid dependence between exceedances, we proceed to decluster the observation
 
 The following plot shows that some exceedances above $327 m.a.s.l$ become more transparent and some others remain more visible. The more visible observations represent the 79 observations (one observation per cluster declustered) obtained after the declustering. 
 
-[TRY WITH ANOTHER THEM]
+[TRY WITH ANOTHER THEME]
 
 ```{r decluster, echo=F, warning=F, message=F}
 
@@ -254,6 +254,25 @@ plot(decluster,
      main = "Declustering of exceedances", # title doesnt appear 
      ylab ="Water Level Values",
      xlab = "Observations")
+
+```
+
+[ANOTHER VERSION OF DECLUSTERING PLOT]
+```{r decluster, echo=F, warning=F, message=F}
+# Decluster 
+decluster <- extRemes::decluster(niveau$Wert, 
+                                 threshold = 327)
+
+decluster
+
+plot(x = rep(1:7883, each = 1), 
+     y = decluster,
+     main = "Declustering of exceedances", # title doesnt appear 
+     sub = paste("threshold =", threshold), 
+     xlab = "Observations",
+     ylab ="Water Level Values")
+
+abline(h = threshold)
 
 ```
 
@@ -308,6 +327,27 @@ The below output shows the return level estimates for 50-year and 100-year event
 ```{r return levels with GDP, echo=F, warning=F, message=F}
 
 return.level(gpd,
+             return.period = c(50, 100))
+
+```
+
+[TRIED TO CONVERT DAILY DATA INTO YEARLY]
+```{r return levels with GDP, echo=F, warning=F, message=F}
+
+niveau.ts$year <- floor_date(niveau.ts$Zeitpunkt_des_Auftretens, "year") # Fct that convert data
+
+niveau.ts2 <- niveau.ts %>%
+              group_by(year) %>%
+              summarize(mean = mean(niveau.ts$Wert)) # Compute mean of water levels for yearly data
+
+decluster2 <- extRemes::decluster(niveau.ts2$mean, 
+                                 threshold = 327)
+
+gpd2 <- extRemes::fevd(unlist(decluster2), 
+                      threshold = threshold, 
+                      type = "GP")   # PB HERE
+
+return.level(gpd2,
              return.period = c(50, 100))
 
 ```
