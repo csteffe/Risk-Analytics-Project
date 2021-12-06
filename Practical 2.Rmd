@@ -22,12 +22,19 @@ load(file = here::here("stocks.Rdata"))
 a)
 
 ```{r}
+# candle plot of the 4 stocks
 
+dif.stocks <- unique(stocks$ticker)
 
-stocks %>% ggplot(aes(x = ref.date, y = price.close)) +
+for (i in 1:length(dif.stocks)){
+
+candplot<- stocks %>% filter (ticker == dif.stocks[i]) %>% ggplot(aes(x = ref.date, y = price.close)) +
     geom_barchart(aes(open = price.open, high = price.high, low = price.low, close = price.close),colour_up = "green", colour_down = "red") +
     labs(title = "AAPL Bar Chart", y = "Closing Price", x = "") + 
     theme_tq()
+
+candplot
+}
 
 ```
 
