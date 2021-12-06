@@ -5,3 +5,11 @@ date: "`r Sys.Date()`"
 output: pdf_document
 ---
 
+
+```{r}
+library(here)
+
+# Read in the data
+load(file = here::here("stocks.Rdata"))
+```
+
