@@ -21,7 +21,6 @@ library(tidyquant)
 load(file = here::here("stocks.Rdata"))
 ```
 
-<<<<<<< HEAD
 
 ```{r}
 
@@ -42,8 +41,7 @@ fig.seg <- fig.seg %>% layout(title = "Stock Prices Candlestick Chart segments()
 fig.seg <- fig.seg %>% rangeslider()
 
 fig.seg
-=======
-a)
+```
 
 ```{r}
 # candle plot of the 4 stocks
@@ -81,6 +79,5 @@ log_returns <- cbind(forth_log,log_returns)
 
 log_returns %>% ggplot(aes(x = ref.date, y = neg_log_returns ))+geom_line()
 
->>>>>>> 835b0c39f8eaeea4eb791d1f579085feb3d2b07e
 ```
 
