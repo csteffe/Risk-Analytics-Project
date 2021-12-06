@@ -13,3 +13,25 @@ library(here)
 load(file = here::here("stocks.Rdata"))
 ```
 
+
+```{r}
+
+  #rect()
+fig.rect <- stocks %>% plot_ly( x = ~stocks$ref.date, type = "candlestick",
+                    open = ~stocks$price.open, close = ~stocks$price.close,
+                    high = ~stocks$price.high, low = ~stocks$price.low) %>% 
+  layout(title = "Stock Prices Candlestick Chart rect()")
+fig.rect
+
+  #segments()
+
+fig.seg <- plot_ly(stocks, x = ~stocks$ref.date, xend = ~stocks$ref.date, color = ~stocks$price.close > stocks$price.open,
+             colors = c("red", "forestgreen"), hoverinfo = "none") 
+fig.seg <- fig.seg %>% add_segments(y = ~stocks$price.low, yend = ~stocks$price.high, size = I(1)) 
+fig.seg <- fig.seg %>% add_segments(y = ~stocks$price.open, yend = ~stocks$price.close, size = I(3)) 
+fig.seg <- fig.seg %>% layout(title = "Stock Prices Candlestick Chart segments()", showlegend =FALSE, yaxis = list(title = "Price")) 
+fig.seg <- fig.seg %>% rangeslider()
+
+fig.seg
+```
+
