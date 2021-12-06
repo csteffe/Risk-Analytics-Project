@@ -8,8 +8,41 @@ output: pdf_document
 
 ```{r}
 library(here)
+library(quantmod)  
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
 
 # Read in the data
 load(file = here::here("stocks.Rdata"))
+```
+
+a)
+
+```{r}
+plot(stocks$ref.date, stocks$price.adjusted)
+rect(ybottom = stocks$price.low, ytop= stocks$price.high)
+
+
+```
+
+
+```{r}
+
+forth_log <- stocks %>% filter(ticker == "NVDA")
+
+log_returns <- data.frame(matrix(NA, nrow = nrow(forth_log), ncol = 1))
+colnames(log_returns) <- "neg_log_returns"
+
+for (i in 1:nrow(stocks)){
+  return_i <- - log(forth_log$price.close[i+1]/forth_log$price.close[i])
+  
+  log_returns$neg_log_returns[i] <- return_i
+}
+
+log_returns <- cbind(forth_log,log_returns)
+
+log_returns %>% ggplot(aes(x = ref.date, y = neg_log_returns ))+geom_line()
+
 ```
 
