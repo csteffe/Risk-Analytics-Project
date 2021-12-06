@@ -298,9 +298,7 @@ points(niveau.ts$Zeitpunkt_des_Auftretens[-1],
 
 ```
 
-## Methods
-
-### Generalized Pareto Distribution (GPD)
+## Generalized Pareto Distribution (GPD)
 
 The GPD is used to describe statistical properties of excesses. Indeed, Extreme Value theory suggests that GPD is a *natural approximation* of the excess distribution function $F_u(x)$ where $x$ is the excess, so $F_u(x) \approx G_{\xi, \beta}(x)$. [maybe add parameters conditions]
 
@@ -318,6 +316,7 @@ plot(gpd,
      main = "Empirical POT vs estimated GPD")
 
 ```
+
 #### Return Levels (50- and 100-year events)
 
 [convert daily into yearly data before return level!!!]
@@ -363,46 +362,6 @@ plot(gpd,
 
 ```
 
-### Point Process Model
-
--> verify + add interpretation + add a little bit of theory 
-
-```{r point process, echo=F, warning=F, message=F}
-
-# Fit an extreme value distribution to data 
-pt_pro <- fevd(unlist(decluster), 
-               threshold = threshold, 
-               type = "PP")
-
-plot(pt_pro, 
-     type = "density", 
-     main = "Empirical POT vs Point Process")
-
-```
-
-#### Return Levels (50- and 100-year events)
-
-[convert daily into yearly data before return level!!!]
-
-The below output shows the return level estimates for 50-year and 100-year events. [ADD INTERPRETATION]
-
-```{r return levels with PP, echo=F, warning=F, message=F}
-
-return.level(gpd,
-             return.period = c(50, 100))
-
-```
-
-The below plot shows the return level estimates by return period. [ADD INTERPRETATION]
-
-```{r return level with PP plot, echo=F, warning=F, message=F}
-
-# Plot of the Return Level
-plot(pt_pro, 
-     type = "rl", 
-     main = "Return level")
-
-```
 ## Block Maxima Approach 
 
 - Explain the drawbacks and advantages of using a block maxima method instead of the one used in c)-e).
