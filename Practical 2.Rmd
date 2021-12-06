@@ -25,11 +25,11 @@ load(file = here::here("stocks.Rdata"))
 ```{r}
 
   #rect()
-fig.rect <- stocks %>% plot_ly( x = ~stocks$ref.date, type = "candlestick",
-                    open = ~stocks$price.open, close = ~stocks$price.close,
-                    high = ~stocks$price.high, low = ~stocks$price.low) %>% 
-  layout(title = "Stock Prices Candlestick Chart rect()")
-fig.rect
+# fig.rect <- stocks %>% plot_ly( x = ~stocks$ref.date, type = "candlestick",
+#                     open = ~stocks$price.open, close = ~stocks$price.close,
+#                     high = ~stocks$price.high, low = ~stocks$price.low) %>% 
+#   layout(title = "Stock Prices Candlestick Chart rect()")
+# fig.rect
 
   #segments()
 
@@ -42,6 +42,23 @@ fig.seg <- fig.seg %>% rangeslider()
 
 fig.seg
 ```
+
+```{r}
+dif.stocks <- unique(stocks$ticker)
+
+for (i in 1:length(dif.stocks)){
+
+fig.rect <- stocks %>% filter (ticker == dif.stocks[i]) %>% plot_ly( x = ~stocks$ref.date, type = "candlestick",
+                    open = ~stocks$price.open, close = ~stocks$price.close,
+                    high = ~stocks$price.high, low = ~stocks$price.low) %>% 
+  layout(title = "Stock Prices Candlestick Chart rect()")
+fig.rect
+
+print(fig.rect)
+}
+```
+
+
 
 ```{r}
 # candle plot of the 4 stocks
