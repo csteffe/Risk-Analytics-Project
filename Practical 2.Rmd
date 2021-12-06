@@ -51,7 +51,7 @@ for (i in 1:length(dif.stocks)){
 fig.rect <- stocks %>% filter (ticker == dif.stocks[i]) %>% plot_ly( x = ~stocks$ref.date, type = "candlestick",
                     open = ~stocks$price.open, close = ~stocks$price.close,
                     high = ~stocks$price.high, low = ~stocks$price.low) %>% 
-  layout(title = "Stock Prices Candlestick Chart rect()")
+  layout(title = paste( dif.stocks[i], "stock Prices Candlestick "))
 fig.rect
 
 print(fig.rect)
@@ -59,29 +59,11 @@ print(fig.rect)
 ```
 
 
-
-```{r}
-# candle plot of the 4 stocks
-
-dif.stocks <- unique(stocks$ticker)
-
-for (i in 1:length(dif.stocks)){
-
-candplot<- stocks %>% filter (ticker == dif.stocks[i]) %>% ggplot(aes(x = ref.date, y = price.close)) +
-    geom_barchart(aes(open = price.open, high = price.high, low = price.low, close = price.close),colour_up = "green", colour_down = "red") +
-    labs(title = paste(dif.stocks[i], "Candle Chart"), y = "Closing Price", x = "") + 
-    theme_tq()
-
-print(candplot)
-}
-
-```
-
 b) 
 
 ```{r}
 
-forth_log <- stocks %>% filter(ticker == "NVDA")
+forth_log <- stocks
 
 log_returns <- data.frame(matrix(NA, nrow = nrow(forth_log), ncol = 1))
 colnames(log_returns) <- "neg_log_returns"
@@ -94,7 +76,7 @@ for (i in 1:nrow(forth_log)){
 
 log_returns <- cbind(forth_log,log_returns)
 
-log_returns %>% ggplot(aes(x = ref.date, y = neg_log_returns ))+geom_line()
+log_returns %>% ggplot(aes(x = ref.date, y = neg_log_returns ))+geom_line()+facet_wrap(~ticker)+ylim(-0.1,0.1)
 
 ```
 
