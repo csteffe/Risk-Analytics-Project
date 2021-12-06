@@ -2,7 +2,9 @@
 title: "Practical 2"
 author: "Colin Steffe, Virany Kho, Jasmine Mawjee, Adela Sahraoui"
 date: "`r Sys.Date()`"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 
@@ -30,10 +32,10 @@ for (i in 1:length(dif.stocks)){
 
 candplot<- stocks %>% filter (ticker == dif.stocks[i]) %>% ggplot(aes(x = ref.date, y = price.close)) +
     geom_barchart(aes(open = price.open, high = price.high, low = price.low, close = price.close),colour_up = "green", colour_down = "red") +
-    labs(title = "AAPL Bar Chart", y = "Closing Price", x = "") + 
+    labs(title = paste(dif.stocks[i], "Candle Chart"), y = "Closing Price", x = "") + 
     theme_tq()
 
-candplot
+print(candplot)
 }
 
 ```
@@ -47,7 +49,7 @@ forth_log <- stocks %>% filter(ticker == "NVDA")
 log_returns <- data.frame(matrix(NA, nrow = nrow(forth_log), ncol = 1))
 colnames(log_returns) <- "neg_log_returns"
 
-for (i in 1:nrow(stocks)){
+for (i in 1:nrow(forth_log)){
   return_i <- - log(forth_log$price.close[i+1]/forth_log$price.close[i])
   
   log_returns$neg_log_returns[i] <- return_i
