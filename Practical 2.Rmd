@@ -12,6 +12,8 @@ library(quantmod)
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
+library(plotly)
+library(tidyquant)
 
 # Read in the data
 load(file = here::here("stocks.Rdata"))
@@ -20,12 +22,16 @@ load(file = here::here("stocks.Rdata"))
 a)
 
 ```{r}
-plot(stocks$ref.date, stocks$price.adjusted)
-rect(ybottom = stocks$price.low, ytop= stocks$price.high)
 
+
+stocks %>% ggplot(aes(x = ref.date, y = price.close)) +
+    geom_barchart(aes(open = price.open, high = price.high, low = price.low, close = price.close),colour_up = "green", colour_down = "red") +
+    labs(title = "AAPL Bar Chart", y = "Closing Price", x = "") + 
+    theme_tq()
 
 ```
 
+b) 
 
 ```{r}
 
