@@ -80,3 +80,36 @@ log_returns %>% ggplot(aes(x = ref.date, y = neg_log_returns ))+geom_line()+face
 
 ```
 
+
+c)
+
+```{r}
+
+library(extRemes)
+
+log_returns_NoNA <- log_returns %>% filter(!is.na(neg_log_returns))
+log_returns_NoNA <- log_returns_NoNA %>% filter(ticker == "TSLA")
+# Mean Residual Life Plot (MRLP)
+extRemes::mrlplot(log_returns_NoNA$neg_log_returns,
+                  main = "Mean Residual Life Plot: Mean Excess Function") 
+
+threshold <- 0.05 # 0.05 seems to be a good threshold for Tesla
+
+# Plot of Peak-over-Threshold
+pot <- plot(x = rep(1:755, 
+                    each = 1), 
+            y = unlist(log_returns_NoNA$neg_log_returns), 
+            main = "Peak-Over-Threshold plot: Exceedances",
+            sub = paste("threshold =", threshold), 
+            xlab = "Observations", 
+            ylab = "Threshold")
+
+pot_points <- unlist(log_returns_NoNA$neg_log_returns) > threshold
+
+points(x = rep(1:755, each = 1)[pot_points], 
+       y = unlist(log_returns_NoNA$neg_log_returns)[pot_points], 
+       col = "red")
+
+abline(h = threshold, col = "red") 
+```
+
