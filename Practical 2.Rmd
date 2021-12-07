@@ -113,3 +113,21 @@ points(x = rep(1:755, each = 1)[pot_points],
 abline(h = threshold, col = "red") 
 ```
 
+
+d)
+
+```{r}
+library(ggplo2)
+
+
+
+# compute value at risks
+quantile(log_returns_NoNA$neg_log_returns , 0.05)
+
+#plot value at risk
+qplot(log_returns_NoNA$neg_log_returns , geom = 'histogram') + geom_histogram(fill = 'lightblue' , bins = 30) +
+    geom_histogram(aes(log_returns_NoNA$neg_log_returns[log_returns_NoNA$neg_log_returns < quantile(log_returns_NoNA$neg_log_returns , 0.05)]) , fill = 'red' , bins = 30) +
+    labs(x = 'Negative log returns')+xlim(-0.20,0.20)
+
+```
+
