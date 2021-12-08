@@ -236,6 +236,8 @@ The POT approach states that the observations above the high threshold $u$ (i.e.
 
 To avoid dependence between exceedances, we proceed to decluster the observations above the threshold $u$. To do so, the declustering keeps only the highest water level maxima of one cluster as the key representative observation of the cluster. [VERIFY WITH THE PROFESSOR]
 
+The maxima identified within each clusters will then be fit to the GPD.
+
 The following plot shows that some exceedances above $327 m.a.s.l$ become more transparent and some others remain more visible. The more visible observations represent the 79 observations (one observation per cluster declustered) obtained after the declustering. 
 
 [TRY WITH ANOTHER THEME]
@@ -406,3 +408,11 @@ plot(pt_pro,
 ## Block Maxima Approach 
 
 - Explain the drawbacks and advantages of using a block maxima method instead of the one used in c)-e).
+
+Advantages:
+The Block Maxima method gives more efficient results when less exceedances are observed. 
+This method may also be preferable when the observations are not exactly independant and identically distributed. For example, when there is seasonal periodicity in case of yearly maxima or, when there is short range dependence that plays a role within blocks but not between blocks.
+
+Drawbacks: 
+BM is less flexible than POT since in practice it might be hard to change the block size, while it is easy in POT to move the threshold continuously.
+Moreover, there are less possibility of very detailed modeling of temporal distribution of extremes than with POT.
