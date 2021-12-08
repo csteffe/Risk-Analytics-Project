@@ -113,6 +113,18 @@ points(x = rep(1:755, each = 1)[pot_points],
 abline(h = threshold, col = "red") 
 ```
 
+We will now fit our stocks data of the upper tail beyond the chosen threshold of 0.05 to a GPD method.
+```{r}
+library(ismev)
+
+# Fit our data of the upper tail beyond threshold of 0.05 to a GPD
+gpd_fit <- gpd.fit(log_returns_NoNA$neg_log_returns, 0.05)
+
+```
+By using the POT approach, we built a model for high values of the negative log-returns where we obtain the Maximum Likelihood Estimates for the scale (sigma) and shape (ksi) parameters/coefficients : 0.01965532 and 0.60647468 [ARE THEY THE COEFF THEY ASKED TO REPORT ??], with Standard Errors being 0.00558524 and 0.24858608. [DOES THIS CORRESPONDS TO THE MEASURE OF UNCERTAINTY ??]
+
+
+
 
 d)
 
