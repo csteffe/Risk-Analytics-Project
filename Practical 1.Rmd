@@ -57,7 +57,7 @@ head(niveau.ts, 6) %>%
 
 The below plot shows the evolution of daily water maxima over 21 years from 01-01-2000 to 01-08-2021. 
 
-We see that the lowest troughs are quite constant over the years (~325.5 meter above sea level) whereas the highest peaks really distinguish themselves among the overall peaks. [SHOULD WE THEN REMOVE THE WEIRD THREE VALUES ?] Indeed, we observe that peaks are mainly observed in the Summer months with the highest peaks recorded on 25-08-2005 at 328.827 (m.a.s.l), on 09-06-2007 at 329.323 (m.a.s.l) and on 14-07-2021 at 328.622 (m.a.s.l). Therefore, over 21 years three years have had extremely and unusually high water levels during the summer, respectively 2005, 2007 and 2021. 
+We see that the lowest troughs are quite constant over the years (~325.5 meter above sea level) whereas the highest peaks really distinguish themselves among the overall peaks. Indeed, we observe that peaks are mainly observed in the Summer months with the highest peaks recorded on 25-08-2005 at 328.827 (m.a.s.l), on 09-06-2007 at 329.323 (m.a.s.l) and on 14-07-2021 at 328.622 (m.a.s.l). Therefore, over 21 years three years have had extremely and unusually high water levels during the summer, respectively 2005, 2007 and 2021. 
 
 We also observe a pattern of the maxima better shown by the green smoothed curve which indicates that water levels fluctuate according to a specific logic within a year (i.e. seasonality?). [How can we assess an homogeneity issue because of a trend ?] -> if seasonality we need a moving threshold and have two separate modeling ?????? 
 
@@ -405,6 +405,7 @@ plot(pt_pro,
      main = "Return level")
 
 ```
+
 ## Block Maxima Approach 
 
 - Explain the drawbacks and advantages of using a block maxima method instead of the one used in c)-e).
