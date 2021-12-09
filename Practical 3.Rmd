@@ -1,7 +1,19 @@
 ---
-title: "Practical 3"
+title: "Practical 3: Web Traffic"
 author: "Colin Steffe, Virany Kho, Jasmine Mawjee, Adela Sahraoui"
 date: "11/25/2021"
 output: html_document
 ---
 
+```{r}
+library(here)
+library(quantmod)  
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+library(tidyquant)
+
+# Read in the data
+load(file = here::here("traffic.Rdata"))
+```
