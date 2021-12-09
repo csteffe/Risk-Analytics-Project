@@ -214,7 +214,7 @@ ts %>%
 
 - Examine the suitability for each time series $R_i$ separately
 - Explain your choice of threshold and briefly comment on the diagnostic plots for each model
-- Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty
+- Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty = provide an interval of values within which the true value  of the threshol is believed to lie with a stated probability (MSE ? with confidence interval ?)
 
 # Detecting Simultaneous High Load
 
