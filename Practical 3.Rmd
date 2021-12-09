@@ -135,7 +135,7 @@ Autocorrelation quantifies the relationship between lagged values of a time seri
 $$
 R_i = \frac{X_i - X_{i-7}}{X_{i-7}} * 100
 $$
-$R_i$ is the modified time series where each series (above $R_8$) of pageviews is the percentage difference between one series and the seventh one before ? 
+$R_i$ is the modified time series where each series (above $R_8$) of pageviews is the relative percentage change time series between one observation at time $i$ and the seventh before $i-7$ ?
 
 ```{r modified time series, echo=F, message=F, warning=F}
 
@@ -159,11 +159,66 @@ for (i in levels(type)) {
       modified_ts$dailycount[modified_ts$type[i]][j] <- "NA"
       
     }
+    
+    modified_ts$dailycount <- "daily count modified"
   }
 }
 
 ```
 
+```{r modified time series plot, echo=F, message=F, warning=F}
+
+modifiedts_plot <- modified_ts %>%
+                   ggplot(mapping = aes(x = date, 
+                                        y = `daily count modified`,
+                                        colour = factor(type))) +
+                   geom_line() +
+  
+                   labs(title = "Modified Time Series: Web Traffic",
+                        x = "Time of Occurrence [1D]", 
+                        y = "Modified Daily count",
+                        fill = type)  +
+          
+                   theme_economist_white() # we can change the theme for something cooler ? 
+
+ggplotly(modifiedts_plot) %>% 
+  config(displayModeBar = T) # can we add the woom opt on the x axis ? 
+  
+# NEED IMPROVEMENT UNREADABLE 
+
+```
+
+```{r full data, echo=F, message=F, warning=F}
+
+# Binding the modified daily count to have everything in the same place
+ts <- cbind(pageviews_ts,
+            modified_ts)
+
+```
+
+## 2016_Summer_Olympics
+
+To compare the time series before and after modification 
+
+```{r relative change 2016_Summer_Olympics, echo=F, message=F, warning=F}
+
+ts %>%
+  filter(type == "2016_Summer_Olympics") %>%
+  ggplot(ts, aes(x = date)) +
+  geom_line(mapping = aes(y = dailycount, colour = "dailycount")) +
+  geom_line(mapping = aes(y = `modified daily count`, colour = "modified daily count"))
+
+```
+
 # Peaks-Over-Threshold
 
-Is the model suitable here for each time series 
+- Examine the suitability for each time series $R_i$ separately
+- Explain your choice of threshold and briefly comment on the diagnostic plots for each model
+- Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty
+
+# Detecting Simultaneous High Load
+
+- Propose one graphical method
+- Propose one numerical method
+
+for detecting simultaneous high load across the 12 series provided, Which pages seem to have simultaneous high load?
