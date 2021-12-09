@@ -5,14 +5,14 @@ date: "11/25/2021"
 output: html_document
 ---
 
-```{r}
+```{r data preparation, echo=F, message=F, warning=F}
+
 library(here)
-library(quantmod)  
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library(plotly)
-library(tidyquant)
+library(fpp3)
 
 # Read in the data
 load(file = here::here("traffic.Rdata"))
@@ -47,16 +47,29 @@ pageviews <- pageviews %>%
                           names_to = "date", 
                           values_to = "dailycount")
 
+# Convert column date into date format
+pageviews$date <- as.Date(pageviews$date, format = "%Y-%m-%d")
+
+# Convert into tsibble
+pageviews_ts <- tsibble(pageviews, 
+                        index = date,
+                        key = c(type, dailycount)) # since duplicates need to keys
+
+# str(pageviews_ts) # to verify the structure of dataframe
+
 ```
 
-We are thus interested in high values of the traffic counts, which are also called high load.
+# Informative Plots
 
-a) 
+- time series plot
+- rolling window
+- seasonal plot
+- time series decompostion
+- ACF plot
 
-```{r data, echo=F, message=F, warning=F}
+
+```{r plots, echo=F, message=F, warning=F}
 
 
-autoplot(pageviews)
-                
-
+            
 ```
