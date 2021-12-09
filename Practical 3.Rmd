@@ -62,6 +62,8 @@ pageviews_ts <- tsibble(pageviews,
 
 ## Time Series
 
+If we see a trend, the time series is not stationary (i.e. does not depend on the time of the observation). 
+
 ```{r time series plot, echo=F, message=F, warning=F}
 
 library(plotly)
@@ -87,6 +89,8 @@ ggplotly(ts_plot) %>%
 ```
 
 ## Seasonal plot
+
+If we see a seasonality, the time series is not stationary (i.e. does not depend on the time of the observation). 
 
 ```{r seasonal plot, echo=F, message=F, warning=F}
 
@@ -128,4 +132,38 @@ Autocorrelation quantifies the relationship between lagged values of a time seri
 
 # Modified Series
 
-$R_i$ is the percentage difference 
+$$
+R_i = \frac{X_i - X_{i-7}}{X_{i-7}} * 100
+$$
+$R_i$ is the modified time series where each series (above $R_8$) of pageviews is the percentage difference between one series and the seventh one before ? 
+
+```{r modified time series, echo=F, message=F, warning=F}
+
+# pour chaque "type" on crée une time series modifiée "modified_ts" pour lesquelles on recalcules la valeur de daily count en utilisant la formule du dessus. etant donné qu'on a - Xi-7 on peut que commencer à calculer pour la 8ème observation de chaque time series (1 par type)
+
+type <- as.factor(type)
+
+# Create a modified time series using the initial one
+modified_ts <- pageviews_ts
+    
+for (i in levels(type)) {
+  
+  for (j in length(levels(pageviews_ts$type))) {
+    
+    if (j > 7) {
+      
+    modified_ts$dailycount[modified_ts$type[i]][j] <- ((pageviews_ts[j] -  pageviews_ts[j-7])/pageviews_ts[j-7])*100
+    
+    } else {
+      
+      modified_ts$dailycount[modified_ts$type[i]][j] <- "NA"
+      
+    }
+  }
+}
+
+```
+
+# Peaks-Over-Threshold
+
+Is the model suitable here for each time series 
