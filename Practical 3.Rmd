@@ -11,7 +11,6 @@ library(here)
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
-library(plotly)
 library(fpp3)
 
 # Read in the data
@@ -61,15 +60,70 @@ pageviews_ts <- tsibble(pageviews,
 
 # Informative Plots
 
-- time series plot
-- rolling window
-- seasonal plot
-- time series decompostion
-- ACF plot
+```{r time series plot, echo=F, message=F, warning=F}
 
+library(plotly)
 
-```{r plots, echo=F, message=F, warning=F}
+ts_plot <- pageviews_ts %>%
+           ggplot(mapping = aes(x = date, 
+                                y = dailycount,
+                                colour = factor(type))) +
+           geom_line() +
+  
+           labs(title = "Web Traffic: Daily Count",
+                x = "Time of Occurrence [1D]", 
+                y = "Daily count",
+                fill = type)  +
+  
+           theme_economist_white() # we can change the theme for something cooler ? 
 
-
-            
+ggplotly(ts_plot) %>% 
+  config(displayModeBar = T) # can we add the woom opt on the x axis ? 
+  
+# NEED IMPROVEMENT UNREADABLE 
+  
 ```
+
+- seasonal plot
+
+```{r seasonal plot, echo=F, message=F, warning=F}
+
+library(tsibble)
+
+# Fill time gaps
+pageviews_nogaps <- pageviews_ts %>%
+                    fill_gaps()
+
+# Seasonal plot
+#season_plot <- pageviews_nogaps %>% 
+               #gg_season(y = dailycount) RUNS FOREVER DONT KNOW WHY 
+
+#ggplotly(season_plot) %>% 
+  #config(displayModeBar = T)
+
+```
+
+- seasonal sub-series
+
+```{r seasonal sub-series, echo=F, message=F, warning=F}
+
+# Example for 2016_Summer_Olympics, the idea would be to do that for all 
+                   
+sub_series_SummerOlymp <- pageviews_nogaps %>%
+                          filter(type == "2016_Summer_Olympics") %>%
+                          mutate(quarter = str_c("Quarter ", as.character(quarter(date)))) %>%
+                          plot(
+                              .date_var = date,
+                              .value = dailycount,
+                              .facet_vars = quarter,
+                              .facet_ncol = 4, 
+                              .color_var = quarter, 
+                              .facet_scales = "fixed",
+                              .interactive = FALSE,
+                              .legend_show = FALSE)
+
+```
+
+- time series decompostion
+
+- ACF plot
