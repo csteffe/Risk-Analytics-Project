@@ -16,4 +16,47 @@ library(tidyquant)
 
 # Read in the data
 load(file = here::here("traffic.Rdata"))
+
+# Convert into tibble 
+pageviews <- as_tibble(pageviews)
+
+# Create new column
+type <- c("Elizabeth_II", 
+          "United_States",
+          "Queen_Victoria",
+          "World_War_II",
+          "World_War_I",
+          "George_VI",
+          "United_Kingdom",
+          "Princess_Margaret,_Countess_of_Snowdon",
+          "Prince_Philip,_Duke_of_Edinburgh",
+          "Winston_Churchill",
+          "Diana,_Princess_of_Wales",
+          "2016_Summer_Olympics")
+
+# Add new column
+pageviews <- cbind(pageviews,
+                   type)
+
+# Reorder colum
+pageviews <- pageviews[, c(804, 1:803)]
+
+# Pivot data frame 
+pageviews <- pageviews %>% 
+             pivot_longer(!type, 
+                          names_to = "date", 
+                          values_to = "dailycount")
+
+```
+
+We are thus interested in high values of the traffic counts, which are also called high load.
+
+a) 
+
+```{r data, echo=F, message=F, warning=F}
+
+
+autoplot(pageviews)
+                
+
 ```
