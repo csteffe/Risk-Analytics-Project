@@ -365,23 +365,6 @@ plot(gpd,
 
 ```
 
-### Point Process Model
-
--> verify + add interpretation + add a little bit of theory 
-
-```{r point process, echo=F, warning=F, message=F}
-
-# Fit an extreme value distribution to data 
-pt_pro <- fevd(unlist(decluster), 
-               threshold = threshold, 
-               type = "PP")
-
-plot(pt_pro, 
-     type = "density", 
-     main = "Empirical POT vs Point Process")
-
-```
-
 #### Return Levels (50- and 100-year events)
 
 [convert daily into yearly data before return level!!!]
