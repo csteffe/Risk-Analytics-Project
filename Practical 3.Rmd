@@ -60,6 +60,8 @@ pageviews_ts <- tsibble(pageviews,
 
 # Informative Plots
 
+## Time Series
+
 ```{r time series plot, echo=F, message=F, warning=F}
 
 library(plotly)
@@ -84,7 +86,7 @@ ggplotly(ts_plot) %>%
   
 ```
 
-- seasonal plot
+## Seasonal plot
 
 ```{r seasonal plot, echo=F, message=F, warning=F}
 
@@ -94,36 +96,36 @@ library(tsibble)
 pageviews_nogaps <- pageviews_ts %>%
                     fill_gaps()
 
-# Seasonal plot
-#season_plot <- pageviews_nogaps %>% 
-               #gg_season(y = dailycount) RUNS FOREVER DONT KNOW WHY 
-
-#ggplotly(season_plot) %>% 
-  #config(displayModeBar = T)
-
 ```
 
-- seasonal sub-series
+### Elizabeth_II
 
-```{r seasonal sub-series, echo=F, message=F, warning=F}
+Je sais pas pk ca tourne pdt mille ans sans voir le résultat
 
-# Example for 2016_Summer_Olympics, the idea would be to do that for all 
-                   
-sub_series_SummerOlymp <- pageviews_nogaps %>%
-                          filter(type == "2016_Summer_Olympics") %>%
-                          mutate(quarter = str_c("Quarter ", as.character(quarter(date)))) %>%
-                          plot(
-                              .date_var = date,
-                              .value = dailycount,
-                              .facet_vars = quarter,
-                              .facet_ncol = 4, 
-                              .color_var = quarter, 
-                              .facet_scales = "fixed",
-                              .interactive = FALSE,
-                              .legend_show = FALSE)
+```{r seasonal Elizabeth_II, echo=F, message=F, warning=F}
+
+library(feasts)
+
+# Seasonal plot
+eliz_seasonal <- pageviews_nogaps %>% 
+                 filter(type == "Elizabeth_II") %>%
+                 gg_season(y = dailycount) 
+
+# Subseries
+eliz_sub <- pageviews_nogaps %>% 
+            filter(type == "Elizabeth_II") %>%
+            gg_subseries(y = dailycount) 
+
+
 
 ```
 
 - time series decompostion
 
-- ACF plot
+## Autocorrelation plot
+
+Autocorrelation quantifies the relationship between lagged values of a time series.
+
+# Modified Series
+
+$R_i$ is the percentage difference 
