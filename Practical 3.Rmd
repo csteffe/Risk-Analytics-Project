@@ -77,9 +77,9 @@ ts_plot <- pageviews_ts %>%
            labs(title = "Web Traffic: Daily Count",
                 x = "Time of Occurrence [1D]", 
                 y = "Daily count",
-                fill = type)  +
+                fill = type)  #+
   
-           theme_economist_white() # we can change the theme for something cooler ? 
+           #theme_economist_white() # we can change the theme for something cooler ? 
 
 ggplotly(ts_plot) %>% 
   config(displayModeBar = T) # can we add the woom opt on the x axis ? 
@@ -145,24 +145,31 @@ type <- as.factor(type)
 
 # Create a modified time series using the initial one
 modified_ts <- pageviews_ts
+ind <- 1
     
 for (i in levels(type)) {
   
-  for (j in length(levels(pageviews_ts$type))) {
+  subset_type <- pageviews_ts %>%
+                 filter(type == i)
+    
+  for (j in 1:nrow(subset_type)) {
     
     if (j > 7) {
       
-    modified_ts$dailycount[modified_ts$type[i]][j] <- ((pageviews_ts[j] -  pageviews_ts[j-7])/pageviews_ts[j-7])*100
+    modified_ts$dailycount[[ind]] <- ((subset_type$dailycount[[j]] -  subset_type$dailycount[[j-7]])/subset_type$dailycount[[j-7]])*100
     
     } else {
       
-      modified_ts$dailycount[modified_ts$type[i]][j] <- "NA"
+      modified_ts$dailycount[[ind]] <- NA
       
     }
     
-    modified_ts$dailycount <- "daily count modified"
+    ind <- ind + 1
   }
 }
+
+modified_ts <- rename(modified_ts, 
+                      "daily count modified" = "dailycount")
 
 ```
 
