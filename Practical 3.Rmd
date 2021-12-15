@@ -169,7 +169,7 @@ for (i in levels(type)) {
 }
 
 modified_ts <- rename(modified_ts, 
-                      "daily count modified" = "dailycount")
+                      "`daily count modified`" = "dailycount")
 
 ```
 
@@ -200,7 +200,7 @@ ggplotly(modifiedts_plot) %>%
 # Binding the modified daily count to have everything in the same place
 ts <- cbind(pageviews_ts,
             modified_ts)
-
+ts <- inner_join(pageviews_ts,modified_ts, by = c("type","date"))
 ```
 
 ## 2016_Summer_Olympics
@@ -209,11 +209,24 @@ To compare the time series before and after modification
 
 ```{r relative change 2016_Summer_Olympics, echo=F, message=F, warning=F}
 
-ts %>%
-  filter(type == "2016_Summer_Olympics") %>%
-  ggplot(ts, aes(x = date)) +
-  geom_line(mapping = aes(y = dailycount, colour = "dailycount")) +
-  geom_line(mapping = aes(y = `modified daily count`, colour = "modified daily count"))
+
+
+hon_yaxis <- list(
+    tickfont= list(color = "orange"),
+    overlaying="y",
+    side="right",
+    title="daily count"
+)
+
+tss <- ts %>%filter(type == "2016_Summer_Olympics")
+plot_ly(tss,width = 800, height = 350)%>% 
+add_lines(x=~date,y=~`daily count modified`,name="daily count modified") %>%
+add_lines(x=~date,y=~dailycount, name="daily count",yaxis = "y2") %>%
+  layout(title="daily count for 2016 summery Olympics",yaxis2 = hon_yaxis) %>% config(displayModeBar = FALSE)
+
+
+
+
 
 ```
 
