@@ -169,7 +169,7 @@ for (i in levels(type)) {
 }
 
 modified_ts <- rename(modified_ts, 
-                      "`daily count modified`" = "dailycount")
+                      "daily count modified" = "dailycount")
 
 ```
 
