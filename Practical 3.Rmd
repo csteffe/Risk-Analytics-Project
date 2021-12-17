@@ -52,7 +52,8 @@ pageviews$date <- as.Date(pageviews$date, format = "%Y-%m-%d")
 # Convert into tsibble
 pageviews_ts <- tsibble(pageviews, 
                         index = date,
-                        key = c(type, dailycount)) # since duplicates need to keys
+                        key = c(type, dailycount)) %>% # since duplicates need to keys         
+                arrange(type, date)
 
 # str(pageviews_ts) # to verify the structure of dataframe
 
@@ -198,9 +199,13 @@ ggplotly(modifiedts_plot) %>%
 ```{r full data, echo=F, message=F, warning=F}
 
 # Binding the modified daily count to have everything in the same place
-ts <- cbind(pageviews_ts,
-            modified_ts)
-ts <- inner_join(pageviews_ts,modified_ts, by = c("type","date"))
+ts <- bind_cols(pageviews_ts, modified_ts) 
+
+ts <- inner_join(pageviews_ts, modified_ts, by = c("type","date"))
+
+ts <- ts %>%
+      arrange(type, date)
+
 ```
 
 ## 2016_Summer_Olympics
@@ -218,11 +223,20 @@ hon_yaxis <- list(
     title="daily count"
 )
 
-tss <- ts %>%filter(type == "2016_Summer_Olympics")
-plot_ly(tss,width = 800, height = 350)%>% 
-add_lines(x=~date,y=~`daily count modified`,name="daily count modified") %>%
-add_lines(x=~date,y=~dailycount, name="daily count",yaxis = "y2") %>%
-  layout(title="daily count for 2016 summery Olympics",yaxis2 = hon_yaxis) %>% config(displayModeBar = FALSE)
+tss <- ts %>%
+       filter(type == "2016_Summer_Olympics")
+
+plot_ly(tss,width = 800, height = 350) %>% 
+add_lines(x = ~date, 
+          y= ~`daily count modified`, 
+          name = "daily count modified") %>%
+add_lines(x = ~date, 
+          y = ~dailycount, 
+          name = "daily count",
+          yaxis = "y2") %>%
+  layout(title = "daily count for 2016 summery Olympics",
+         yaxis2 = hon_yaxis) %>% 
+  config(displayModeBar = FALSE)
 
 
 
@@ -234,29 +248,18 @@ add_lines(x=~date,y=~dailycount, name="daily count",yaxis = "y2") %>%
 
 - Examine the suitability for each time series $R_i$ separately
 - Explain your choice of threshold and briefly comment on the diagnostic plots for each model
-- Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty = provide an interval of values within which the true value  of the threshol is believed to lie with a stated probability (MSE ? with confidence interval ?)
 
-
-```{r}
+```{r qqplot, echo=F, message=F, warning=F}
 
 # qqplot by types ( two ways)
 
-
-#facet_wrap
- ggplot(data = ts, aes(sample = `daily count modified`)) + 
-  geom_qq(color = "pink") +
-  geom_qq_line(color = "dark green",scales = "free") +
-  labs(y = "daily count modified") + 
-   facet_wrap(~type)
-
- types <- unique(ts$type)
+types <- unique(ts$type)
  
- 
- # one plot per type
+# one plot per type
 for (typex in types){
   
-  
- ts_type <- ts %>% filter(type == typex) 
+ ts_type <- ts %>% 
+   filter(type == typex) 
  
   qqnorm(ts_type$`daily count modified`,
        ylab = "Latitude of Seismic Events",
@@ -269,47 +272,61 @@ for (typex in types){
   labs(y = "Latitude of Seismic Events") %>% print ()
   
 }
- 
- 
- 
+
+```
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
 types <- unique(ts$type)
-
-
- ggplot(data = ts, aes(sample = `daily count modified`)) + 
-  geom_qq(color = "pink") +
-  geom_qq_line(color = "dark green",scales = "free") +
-  labs(y = "daily count modified") + 
-   facet_wrap(~type)
-
- types <- unique(ts$type)
  
 for (typex in types){
   
+ ts_type <- ts %>% 
+   filter(type == typex) 
+ 
+ ts_type <- ts_type %>% 
+   filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                  main = paste("Mean Residual Life Plot: Mean Excess Function for", typex))
+}
 
+```
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+types <- unique(ts$type)
+
+u <- c(60, 70, 125, 200, 100, 700, 100, 50, 35, 100, 25, 30)
+
+i <- 1
+
+for (typex in types){
   
-  
- ts_type <- ts %>% filter(type == typex) 
- ts_type <- ts_type %>% filter(!is.na(`daily count modified`))
+ ts_type <- ts %>% 
+   filter(type == typex) 
  
-   # Mean Residual Life Plot (MRLP)
-extRemes::mrlplot(ts_type$`daily count modified`,
-                  main = paste("Mean Residual Life Plot: Mean Excess Function for", typex) )
- 
+ ts_type <- ts_type %>% 
+   filter(!is.na(`daily count modified`))
+
  plot(x = rep(1:nrow(ts_type), 
                     each = 1), 
             y = unlist(ts_type$`daily count modified`), 
             main = paste("Peak-Over-Threshold plot Exceedances for : ", typex),
-            #sub = paste("threshold =", threshold), 
+            sub = paste("threshold =", u[i]), 
             xlab = "Observations", 
-            ylab = "Threshold")
-
-  
+            ylab = "Threshold") 
+ 
+ abline(abline(h = u[i], col = "red"))
+ 
+ i <- i+1
+ 
 }
- 
- 
- 
+
 ```
 
+- Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty = provide an interval of values within which the true value  of the threshol is believed to lie with a stated probability (MSE ? with confidence interval ?)
 
 
 # Detecting Simultaneous High Load
