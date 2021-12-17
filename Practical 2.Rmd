@@ -129,7 +129,7 @@ By using the POT approach, we built a model for high values of the negative log-
 d)
 
 ```{r}
-library(ggplo2)
+library(ggplot2)
 
 
 
