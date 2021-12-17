@@ -236,6 +236,82 @@ add_lines(x=~date,y=~dailycount, name="daily count",yaxis = "y2") %>%
 - Explain your choice of threshold and briefly comment on the diagnostic plots for each model
 - Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty = provide an interval of values within which the true value  of the threshol is believed to lie with a stated probability (MSE ? with confidence interval ?)
 
+
+```{r}
+
+# qqplot by types ( two ways)
+
+
+#facet_wrap
+ ggplot(data = ts, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green",scales = "free") +
+  labs(y = "daily count modified") + 
+   facet_wrap(~type)
+
+ types <- unique(ts$type)
+ 
+ 
+ # one plot per type
+for (typex in types){
+  
+  
+ ts_type <- ts %>% filter(type == typex) 
+ 
+  qqnorm(ts_type$`daily count modified`,
+       ylab = "Latitude of Seismic Events",
+       col = "purple") %>%print ()
+  
+  
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Latitude of Seismic Events") %>% print ()
+  
+}
+ 
+ 
+ 
+types <- unique(ts$type)
+
+
+ ggplot(data = ts, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green",scales = "free") +
+  labs(y = "daily count modified") + 
+   facet_wrap(~type)
+
+ types <- unique(ts$type)
+ 
+for (typex in types){
+  
+
+  
+  
+ ts_type <- ts %>% filter(type == typex) 
+ ts_type <- ts_type %>% filter(!is.na(`daily count modified`))
+ 
+   # Mean Residual Life Plot (MRLP)
+extRemes::mrlplot(ts_type$`daily count modified`,
+                  main = paste("Mean Residual Life Plot: Mean Excess Function for", typex) )
+ 
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for : ", typex),
+            #sub = paste("threshold =", threshold), 
+            xlab = "Observations", 
+            ylab = "Threshold")
+
+  
+}
+ 
+ 
+ 
+```
+
+
+
 # Detecting Simultaneous High Load
 
 - Propose one graphical method
