@@ -377,8 +377,12 @@ for detecting simultaneous high load across the 12 series provided, Which pages 
 
 
 # idea for graphical representation : block maxima by week colored by type
+# https://rdrr.io/cran/extRemes/man/blockmaxxer.html
 
 # numerical method 
 # GDP model ?
+#https://rdrr.io/cran/evir/man/gpd.html
+
+
 ```
 
