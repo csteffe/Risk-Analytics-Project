@@ -336,17 +336,21 @@ library(evd)
 data99 <- data.frame(matrix(0, nrow = 2, ncol = length(unique(ts$type))))
 colnames(data99) <- unique(ts$type)
 
+
 for (i in 1:ncol(data99)){
-  i <- 1
+
+  # filter for the type
    ts_type <- ts %>% 
    filter(type == names(data99)[i]) 
  
+   # remove na
  ts_type <- ts_type %>% 
    filter(!is.na(`daily count modified`))
  
  # compute 99 quantile
- quantile99 <- abs(quantile(ts_type$`daily count modified` , 0.01))
+ quantile99 <- quantile(ts_type$`daily count modified` , 0.99)
  
+ # save the quantile in the data.frame
  data99[1,i] <- quantile99 
  
  # measure of uncertainty
@@ -355,8 +359,8 @@ for (i in 1:ncol(data99)){
  # doc of the function here : https://www.rdocumentation.org/packages/evd/versions/2.3-3/topics/fpot
  uncertainty <- fpot(ts_type$`daily count modified`, threshold = thresholds[i], mper = quantile99)
  
- # need to find which element of fpot to keep for uncertainty after the dolar
- #data99[2,i] <- uncertainty$
+ # not sure if we need to save the r level or shape
+ data99[2,i] <- uncertainty$std.err[1]
 }
 
 
