@@ -298,7 +298,7 @@ for (typex in types){
 
 types <- unique(ts$type)
 
-u <- c(60, 70, 125, 200, 100, 700, 100, 50, 35, 100, 25, 30)
+thresholds <- c(60, 70, 125, 200, 100, 700, 100, 50, 35, 100, 25, 30)
 
 i <- 1
 
@@ -314,11 +314,11 @@ for (typex in types){
                     each = 1), 
             y = unlist(ts_type$`daily count modified`), 
             main = paste("Peak-Over-Threshold plot Exceedances for : ", typex),
-            sub = paste("threshold =", u[i]), 
+            sub = paste("threshold =", thresholds[i]), 
             xlab = "Observations", 
             ylab = "Threshold") 
  
- abline(abline(h = u[i], col = "red"))
+ abline(abline(h = thresholds[i], col = "red"))
  
  i <- i+1
  
@@ -353,7 +353,7 @@ for (i in 1:ncol(data99)){
  
  # not sure about the mper argument
  # doc of the function here : https://www.rdocumentation.org/packages/evd/versions/2.3-3/topics/fpot
- uncertainty <- fpot(ts_type$`daily count modified`, threshold = u[i], mper = quantile99)
+ uncertainty <- fpot(ts_type$`daily count modified`, threshold = thresholds[i], mper = quantile99)
  
  # need to find which element of fpot to keep for uncertainty after the dolar
  #data99[2,i] <- uncertainty$
@@ -382,7 +382,10 @@ for detecting simultaneous high load across the 12 series provided, Which pages 
 # numerical method 
 # GDP model ?
 #https://rdrr.io/cran/evir/man/gpd.html
+library(evir)
+modified_NoNA <- modified_ts %>% filter(!is.na(`daily count modified`))
 
+gpd.model <- gpd(modified_NoNA$`daily count modified`, threshold = mean(thresholds), method = "ml")
 
 ```
 
