@@ -363,10 +363,6 @@ for (i in 1:ncol(data99)){
 ```
 
 
-```{r}
-# measure of uncertainty
-#Some analytical formulas exist (e.g. see mper= argument in evd::fpot).
-```
 
 
 # Detecting Simultaneous High Load
