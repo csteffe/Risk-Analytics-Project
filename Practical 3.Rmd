@@ -329,6 +329,41 @@ for (typex in types){
 - Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty = provide an interval of values within which the true value  of the threshol is believed to lie with a stated probability (MSE ? with confidence interval ?)
 
 ```{r}
+
+library(evd)
+# data frame for the 99 quantile and measure of uncertainty for all the type
+
+data99 <- data.frame(matrix(0, nrow = 2, ncol = length(unique(ts$type))))
+colnames(data99) <- unique(ts$type)
+
+for (i in 1:ncol(data99)){
+  i <- 1
+   ts_type <- ts %>% 
+   filter(type == names(data99)[i]) 
+ 
+ ts_type <- ts_type %>% 
+   filter(!is.na(`daily count modified`))
+ 
+ # compute 99 quantile
+ quantile99 <- abs(quantile(ts_type$`daily count modified` , 0.01))
+ 
+ data99[1,i] <- quantile99 
+ 
+ # measure of uncertainty
+ 
+ # not sure about the mper argument
+ # doc of the function here : https://www.rdocumentation.org/packages/evd/versions/2.3-3/topics/fpot
+ uncertainty <- fpot(ts_type$`daily count modified`, threshold = u[i], mper = quantile99)
+ 
+ # need to find which element of fpot to keep for uncertainty after the dolar
+ #data99[2,i] <- uncertainty$
+}
+
+
+```
+
+
+```{r}
 # measure of uncertainty
 #Some analytical formulas exist (e.g. see mper= argument in evd::fpot).
 ```
