@@ -328,6 +328,11 @@ for (typex in types){
 
 - Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty = provide an interval of values within which the true value  of the threshol is believed to lie with a stated probability (MSE ? with confidence interval ?)
 
+```{r}
+# measure of uncertainty
+#Some analytical formulas exist (e.g. see mper= argument in evd::fpot).
+```
+
 
 # Detecting Simultaneous High Load
 
@@ -335,3 +340,14 @@ for (typex in types){
 - Propose one numerical method
 
 for detecting simultaneous high load across the 12 series provided, Which pages seem to have simultaneous high load?
+
+```{r}
+# voir module 4
+
+
+# idea for graphical representation : block maxima by week colored by type
+
+# numerical method 
+# GDP model ?
+```
+
