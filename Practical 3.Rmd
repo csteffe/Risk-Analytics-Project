@@ -216,15 +216,23 @@ To compare the time series before and after modification
 
 
 
-hon_yaxis <- list(
-    tickfont= list(color = "orange"),
-    overlaying="y",
-    side="right",
-    title="daily count"
-)
+# solution to align the 0 : https://stackoverflow.com/questions/52443673/one-zeroline-for-two-y-axis-in-plotly
 
 tss <- ts %>%
        filter(type == "2016_Summer_Olympics")
+
+yaxis1 <- list(zeroline = TRUE,
+               range = c(min(tss$`daily count modified`, na.rm = TRUE),max(tss$`daily count modified`, na.rm = TRUE))
+)
+
+yaxis2 <- list(
+    tickfont= list(color = "orange"),
+    overlaying="y",
+    side="right",
+    title="daily count",
+    zeroline = TRUE,
+    range = c(min(tss$`daily count modified`, na.rm = TRUE),max(tss$dailycount, na.rm = TRUE))
+)
 
 plot_ly(tss,width = 800, height = 350) %>% 
 add_lines(x = ~date, 
@@ -234,9 +242,10 @@ add_lines(x = ~date,
           y = ~dailycount, 
           name = "daily count",
           yaxis = "y2") %>%
-  layout(title = "daily count for 2016 summery Olympics",
-         yaxis2 = hon_yaxis) %>% 
+  layout(title = "daily count for 2016 summery Olympics", yaxis = yaxis1 ,
+         yaxis2 = yaxis2) %>% 
   config(displayModeBar = FALSE)
+
 
 
 
