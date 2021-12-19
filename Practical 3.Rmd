@@ -412,9 +412,9 @@ bm <- blockmaxxer(tsnona, blocks = tsnona$date, which="daily count modified")
 plot(tsnona$date, tsnona$`daily count modified`, xlab = "Year", ylab = "daily count modified",
     cex = 1.25, cex.lab = 1.25,
     col = factor(tsnona$type), bg = "lightblue", pch = 21)
-points(bm$date, bm$`daily count modified`, col="darkred", cex=1.5)
+points(bm$date, bm$`daily count modified`, col="darkred", cex=1.5) 
 
-
+library(plotly)
 
 # numerical method 
 # GDP model ?
@@ -423,6 +423,14 @@ library(evir)
 modified_NoNA <- modified_ts %>% filter(!is.na(`daily count modified`))
 
 gpd.model <- gpd(modified_NoNA$`daily count modified`, threshold = mean(thresholds), method = "ml")
+
+```
+
+
+```{r width = 500}
+c <-ggplot(tsnona, aes(x=date, y=`daily count modified`)) + geom_point(aes(color = type)) + geom_point(data=bm,aes(date,`daily count modified`, fill = type), colour = "#FF6666") 
+
+ggplotly(c)
 
 ```
 
