@@ -382,6 +382,18 @@ for detecting simultaneous high load across the 12 series provided, Which pages 
 
 # idea for graphical representation : block maxima by week colored by type
 # https://rdrr.io/cran/extRemes/man/blockmaxxer.html
+tsnona <- ts%>% filter(!is.na(`daily count modified`))
+
+# compute block maxima
+bm <- blockmaxxer(tsnona, blocks = tsnona$date, which="daily count modified")
+
+# need to to color by variable type
+plot(tsnona$date, tsnona$`daily count modified`, xlab = "Year", ylab = "daily count modified",
+    cex = 1.25, cex.lab = 1.25,
+    col = "darkblue", bg = "lightblue", pch = 21)
+points(bm$date, bm$`daily count modified`, col="darkred", cex=1.5)
+
+
 
 # numerical method 
 # GDP model ?
