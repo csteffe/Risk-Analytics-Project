@@ -250,29 +250,6 @@ The selected threshold $u$ is 125.
 
 ```
 
-## Model Diagnostic
-
-```{r, echo=F, message=F, warning=F}
-
-# numerical method 
-# GDP model ?
-#https://rdrr.io/cran/evir/man/gpd.html
-library(evir)
-
-modified_NoNA <- modified_ts %>% filter(!is.na(`daily count modified`))
-
-ElizII <- modified_NoNA %>%
-          filter(type == "Elizabeth_II")
-
-gpd_model_ElizII <- gpd(ElizII$`daily count modified`, threshold = 125)
-
-par(mfrow = c(2,2)) # Change the panel layout to 2 x 2
-plot(gpd_model_ElizII)
-
-#gpd_plot_ElizII <- tailplot(gpd_model_ElizII)
-#gpd.sf <- gpd.sfall(gpd.plot,0.99)
-
-```
 
 ## United States {.tabset}
 
@@ -1061,10 +1038,11 @@ ggplotly(c)
 ```{r, echo=F, message=F, warning=F}
 
 library(FRAPO)
+modified_NoNA <- modified_ts %>% drop_na
 
 modified_pivot <- modified_NoNA %>% pivot_wider(values_from =`daily count modified`, names_from = type,date)
 
-tdc(modified_pivot[,-1], method = "EVT")
+tdc(modified_pivot[,-1], method = "EVT") %>% knitr::kable()
 
 ```
 
