@@ -66,9 +66,12 @@ pageviews_ts <- tsibble(pageviews,
 
 ## Time Series
 
-Since we do not see a trend, we understand that the time series are stationary (i.e. depend on the time of the observation). 
+ Since we do not see a trend, we understand that the time series are stationary (i.e. depend on the time of the observation). 
 
-The plot below does not seem to detail a specific seasonal trend and pattern. Therefore, the search pattern of these topics is not related to the time of the year. However, we can see that in certain times of the year there are some large peaks, and the majority seem to be linked to the British Royal family. These peaks could be due to independent events occurring, such as the well-being of the Queen or the arrival of the TV series the Crown that could spark interest in people's searches in regards to the royal family. We can also see that the Summer Olympic searches are high around the time of it happening or building up to the event. However, once the Olympic games ended, the searches fall drastically, as to be expected.
+ From the plot below, we do see that many of the high loads and peaks were from searches done on members of the British Royal family such as Queen Victoria and Elizabeth II. These peaks are not linked to any seasonal trends and are instead due to independent events. For instance, the peaks increase massively as of 2016 in relation to the royal family members. One potential reason for this could be the arrival of the Netflix Tv Series “The Crown” which debuted in 2016 and details the lives of the royals and which is watched by many people, hence why searches could be so high. Moreover, with members such as Elizabeth II and Prince Philip being such important figures and rather elderly, there have often been health scares which could have also sparked high searches in regards to their well-being and updates. 
+ We can also see that the Summer Olympic searches are high around the time of it happening or building up to the event. However, once the Olympic games ended, the searches fall drastically, as to be expected.
+
+
 
 ```{r time series plot, echo=F, message=F, warning=F}
 
