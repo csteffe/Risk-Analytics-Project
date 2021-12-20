@@ -398,7 +398,7 @@ for (i in 1:ncol(data99)){
 for detecting simultaneous high load across the 12 series provided, Which pages seem to have simultaneous high load?
 
 ```{r}
-# voir module 4
+
 
 library(extRemes)
 # idea for graphical representation : block maxima by week colored by type
@@ -408,29 +408,39 @@ tsnona <- ts%>% filter(!is.na(`daily count modified`))
 # compute block maxima
 bm <- blockmaxxer(tsnona, blocks = tsnona$date, which="daily count modified")
 
-# need to to color by variable type
-plot(tsnona$date, tsnona$`daily count modified`, xlab = "Year", ylab = "daily count modified",
-    cex = 1.25, cex.lab = 1.25,
-    col = factor(tsnona$type), bg = "lightblue", pch = 21)
-points(bm$date, bm$`daily count modified`, col="darkred", cex=1.5) 
-
 library(plotly)
 
+c <-ggplot(tsnona, aes(x=date, y=`daily count modified`)) + geom_point(aes(color = type)) + geom_point(data=bm,aes(date,`daily count modified`, fill = type), colour = "lightpink1") 
+
+ggplotly(c)
+
+
+```
+
+
+```{r}
 # numerical method 
 # GDP model ?
 #https://rdrr.io/cran/evir/man/gpd.html
 library(evir)
 modified_NoNA <- modified_ts %>% filter(!is.na(`daily count modified`))
 
-gpd.model <- gpd(modified_NoNA$`daily count modified`, threshold = mean(thresholds), method = "ml")
+gpd.model <- gpd(modified_NoNA$`daily count modified`, threshold = mean(thresholds))
+
+gpd.plot <- tailplot(gpd.model)
+
+#gpd.sf <- gpd.sfall(gpd.plot,0.99)
 
 ```
 
 
-```{r width = 500}
-c <-ggplot(tsnona, aes(x=date, y=`daily count modified`)) + geom_point(aes(color = type)) + geom_point(data=bm,aes(date,`daily count modified`, fill = type), colour = "#FF6666") 
+```{r}
+library(FRAPO)
 
-ggplotly(c)
+modified_pivot <- modified_NoNA %>% pivot_wider(values_from =`daily count modified`, names_from = type,date)
 
+cov.mat <- cov(modified_pivot[,-1])
+
+tdc(cov.mat, method = "EVT")
 ```
 
