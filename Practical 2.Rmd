@@ -93,9 +93,10 @@ log_returns %>%
   ylim(-0.1,0.1)
 
 ```
+# Peak-Over-Threshold 
 
-
-c)
+We choose a threshold of 0.05 based on the mean residual plot. We plot the mean over
+We 
 
 ```{r, echo=F, warning=F, message=F}
 
