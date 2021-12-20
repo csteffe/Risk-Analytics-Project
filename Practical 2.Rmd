@@ -21,10 +21,12 @@ library(tidyquant)
 load(file = here::here("stocks.Rdata"))
 ```
 
-# Candlestick plot  
+# Candlestick Plot {.tabset}
 
+## Stocks Gathered
 
-Below is displayed the candlestick plot including the 4 stocks prices. As Amazon in comparison, has a much higher stock price you can use the zoom to see the 3 other stocks prices evolution over time.  
+Below is displayed the candlestick plot including the four stocks prices. Since Amazon has a much higher stock price (~1000$) than other stocks, it takes the most prominent size on the below plot compared to the others.  You can use the zoom to see the detail of the three other stocks price evolution over time. 
+
 ```{r, echo=F, warning=F, message=F}
 
   #rect()
@@ -46,26 +48,28 @@ fig.seg <- fig.seg %>% rangeslider()
 fig.seg
 ```
 
-# Candelstick with the 4 stock prices separetely
-
+## Stock Prices Separately
 
 ```{r, echo=F, warning=F, message=F}
 dif.stocks <- unique(stocks$ticker)
 
 for (i in 1:length(dif.stocks)){
 
-fig.rect <- stocks %>% filter (ticker == dif.stocks[i]) %>% plot_ly( x = ~stocks$ref.date, type = "candlestick",
+fig.rect <- stocks %>% 
+            filter (ticker == dif.stocks[i]) %>% 
+            plot_ly( x = ~stocks$ref.date, type = "candlestick",
                     open = ~stocks$price.open, close = ~stocks$price.close,
                     high = ~stocks$price.high, low = ~stocks$price.low) %>% 
-  layout(title = paste( dif.stocks[i], "stock Prices Candlestick "))
+            layout(title = paste( dif.stocks[i], "stock Prices Candlestick "))
 fig.rect
 
 print(fig.rect)
 }
 ```
 
+# Log-Returns
 
-# log returns plot for the 4 stock prices
+For all four stocks, it seems that the mean of the log-returns is 0 or close to 0 and that they are stationary. *AAPL* and *AMZN* become more volatile in 2019 and their shapes seem to be skewed. *NVDA* and *TSLA* seem to be more volatile and their shapes seem to indicate they follow a normal distribution. 
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -82,7 +86,11 @@ for (i in 1:nrow(forth_log)){
 
 log_returns <- cbind(forth_log,log_returns)
 
-log_returns %>% ggplot(aes(x = ref.date, y = neg_log_returns ))+geom_line()+facet_wrap(~ticker)+ylim(-0.1,0.1)
+log_returns %>% 
+  ggplot(aes(x = ref.date, y = neg_log_returns )) + 
+  geom_line() +
+  facet_wrap(~ticker) +
+  ylim(-0.1,0.1)
 
 ```
 
@@ -117,6 +125,14 @@ points(x = rep(1:755, each = 1)[pot_points],
        col = "red")
 
 abline(h = threshold, col = "red") 
+
+pof.model <- fpot(log_returns_NoNA$neg_log_returns, threshold = 0.05, mper = 0.95)
+
+uncertainty <- pof.model$std.err
+
+print("uncertainty")
+print(uncertainty)
+
 ```
 
 We will now fit our stocks data of the upper tail beyond the chosen threshold of 0.05 to a GPD method.
