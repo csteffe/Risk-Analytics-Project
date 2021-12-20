@@ -66,7 +66,9 @@ pageviews_ts <- tsibble(pageviews,
 
 ## Time Series
 
-If we see a trend, the time series is not stationary (i.e. does not depend on the time of the observation). 
+Since we do not see a trend, we understand that the time series are stationary (i.e. depend on the time of the observation). 
+
+The plot below does not seem to detail a specific seasonal trend and pattern. Therefore, the search pattern of these topics is not related to the time of the year. However, we can see that in certain times of the year there are some large peaks, and the majority seem to be linked to the British Royal family. These peaks could be due to independent events occurring, such as the well-being of the Queen or the arrival of the TV series the Crown that could spark interest in people's searches in regards to the royal family. We can also see that the Summer Olympic searches are high around the time of it happening or building up to the event. However, once the Olympic games ended, the searches fall drastically, as to be expected.
 
 ```{r time series plot, echo=F, message=F, warning=F}
 
@@ -91,12 +93,17 @@ ggplotly(ts_plot) %>%
 ```
 ## Bar plot
 
+We have made a bar plot depicting the frequency of views and searches on a given topic/type.
+
 ```{r bar plot, echo=F, message=F, warning=F}
 
-pageviews_ts %>% 
+a <- pageviews_ts %>% 
   ggplot() + 
-  geom_histogram(aes(x = dailycount), na.rm = TRUE) + 
-  geom_vline(xintercept = mean (pageviews_ts$dailycount, na.rm = TRUE))
+  geom_histogram(aes(x = dailycount, fill=type), na.rm = TRUE) + 
+  geom_vline(xintercept = mean (pageviews_ts$dailycount, na.rm = TRUE)) + labs(y="frequency")
+
+library(plotly)
+ggplotly(a)
          
 ```
 
@@ -143,6 +150,8 @@ modified_ts <- rename(modified_ts,
 
 ```
 
+When plotting the relative weekly change we see the highs and lows more clearly. There is a massive high load in the traffic count April 2016 for Princess Margaret and another big but smaller peak for Winston Churchill in February 2016. 
+
 ```{r modified time series plot, echo=F, message=F, warning=F}
 
 modifiedts_plot <- modified_ts %>%
@@ -179,15 +188,17 @@ ts <- ts %>%
 
 # Peaks-Over-Threshold {.tabset}
 
-1) Examine the suitability for each time series $R_i$ separately:
+For each time series ($R_i,\ i = 1, ..., 12$), we plot their daily count distribution on a **Q-Q plot** to assess if their data come from a theoretical distribution (e.g. Normal). Using the qq draws the correlation between a given sample and the normal distribution. The *geom_line(..., distribution = stats::qqnorm)* function visually checks the normality assumption of the distribution. If the assumption does not hold, we look into how/what data points contribute to the violation. 
 
-2)  Explain your choice of threshold and briefly comment on the diagnostic plots for each model: 
+Results: on all below Q-Q plots, we observe that the daily count distributions follow a normal distribution when in the bulk of the distribution but departs from when in the tail indicating that the data is skewed. Indeed, it is right-skewed (i.e. positively skewed). 
 
-* **Mean Residual Plot**: The following plots are used to choose the most adequate thresholds. Ideed, the value of $u$ from which the plot becomes approximately linear can generally be selected as the optimal threshold
+Knowing that the data is right-skewed we generate the time series' **Mean Residual Plot** using the *mrlplot()* function from the *extRemes* package which plots the potential thresholds against the mean excess. The following plots are used to choose the most adequate thresholds. Indeed, the value of $u$ from which the plot becomes approximately linear can generally be selected as the optimal threshold. 
 
-## Elizabeth II {.tabset}
+After setting their theoretical optimal threshold, we plot their **Peaks-Over-Threshold Plot** with their threshold $u$ to display the exceedences. Note that if a threshold is too low then the extreme value approach cannot be valid and that if it is too high we cannot obtain insightful results because of too few data.
 
-### Distribution
+### Elizabeth II {.tabset}
+
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -197,13 +208,14 @@ ts <- ts %>%
    filter(type == "Elizabeth_II") 
  
   ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
-  geom_qq(color = "pink") +
+  geom_qq(color = "pink", distribution = stats::qnorm) +
   geom_qq_line(color = "dark green") +
-  labs(y = "Daily Count")
+  labs(y = "Daily Count",
+       )
 
 ```
 
-### Mean Residual Plot
+#### Mean Residual Plot
 
 The selected threshold $u$ is 125.
 
@@ -222,7 +234,9 @@ The selected threshold $u$ is 125.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are not too few data points exceeding the threshold nor to many. Therefore, we assume that using the POT model is suitable. 
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -251,9 +265,9 @@ The selected threshold $u$ is 125.
 ```
 
 
-## United States {.tabset}
+### United States {.tabset}
 
-### Distribution
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -269,7 +283,7 @@ The selected threshold $u$ is 125.
 
 ```
 
-### Mean Residual Plot
+#### Mean Residual Plot
 
 The selected threshold $u$ is 35.
 
@@ -287,7 +301,9 @@ The selected threshold $u$ is 35.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable. 
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -316,9 +332,9 @@ The selected threshold $u$ is 35.
 
 ```
 
-## Queen Victoria {.tabset}
+### Queen Victoria {.tabset}
 
-### Distribution
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -334,7 +350,7 @@ The selected threshold $u$ is 35.
 
 ```
 
-### Mean Residual Plot 
+#### Mean Residual Plot 
 
 The selected threshold $u$ is 100.
 
@@ -352,7 +368,9 @@ The selected threshold $u$ is 100.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are not too few nor too many data points exceeding the threshold. Therefore, we assume that using the POT model is suitable. 
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -381,9 +399,9 @@ The selected threshold $u$ is 100.
 
 ```
 
-## World War II {.tabset}
+### World War II {.tabset}
 
-### Distribution
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -399,7 +417,7 @@ The selected threshold $u$ is 100.
 
 ```
 
-### Mean Residual Plot
+#### Mean Residual Plot
 
 The selected threshold $u$ is 30.
 
@@ -417,7 +435,9 @@ The selected threshold $u$ is 30.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are not too few nor too many data points exceeding the threshold. Therefore, we assume that using the POT model is suitable. 
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -446,9 +466,9 @@ The selected threshold $u$ is 30.
 
 ```
 
-## World War I {.tabset}
+### World War I {.tabset}
 
-### Distribution
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -464,7 +484,7 @@ The selected threshold $u$ is 30.
 
 ```
 
-### Mean Residual Plot
+#### Mean Residual Plot
 
 The selected threshold $u$ is 25.
 
@@ -482,7 +502,9 @@ The selected threshold $u$ is 25.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are not too few nor too many data points exceeding the threshold. Therefore, we assume that using the POT model is suitable. 
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -511,9 +533,9 @@ The selected threshold $u$ is 25.
 
 ```
 
-## George VI {.tabset}
+### George VI {.tabset}
 
-### Distribution
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -529,7 +551,7 @@ The selected threshold $u$ is 25.
 
 ```
 
-### Mean Residual Plot
+#### Mean Residual Plot
 
 The selected threshold $u$ is 200.
 
@@ -547,7 +569,9 @@ The selected threshold $u$ is 200.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable. 
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -576,9 +600,9 @@ The selected threshold $u$ is 200.
 
 ```
 
-## United Kingdom {.tabset}
+### United Kingdom {.tabset}
 
-### Distribution
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -594,7 +618,7 @@ The selected threshold $u$ is 200.
 
 ```
 
-### Mean Residual Plot
+#### Mean Residual Plot
 
 The selected threshold $u$ is 50.
 
@@ -612,7 +636,9 @@ The selected threshold $u$ is 50.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable.
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -641,9 +667,9 @@ The selected threshold $u$ is 50.
 
 ```
 
-## Princess Margaret, Countess of Snowdon {.tabset}
+### Princess Margaret, Countess of Snowdon {.tabset}
 
-### Distribution
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -659,7 +685,7 @@ The selected threshold $u$ is 50.
 
 ```
 
-### Mean Residual Plot
+#### Mean Residual Plot
 
 The selected threshold $u$ is 700.
 
@@ -677,7 +703,9 @@ The selected threshold $u$ is 700.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable.
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -705,9 +733,9 @@ The selected threshold $u$ is 700.
 
 ```
 
-## Prince Philip, Duke of Edinburgh {.tabset}
+### Prince Philip, Duke of Edinburgh {.tabset}
 
-### Distribution
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -723,9 +751,9 @@ The selected threshold $u$ is 700.
 
 ```
 
-### Mean Residual Plot
+#### Mean Residual Plot
 
-The selected threshold $u$ is 100.
+The selected threshold $u$ is 400.
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -741,7 +769,9 @@ The selected threshold $u$ is 100.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable.
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -755,24 +785,24 @@ The selected threshold $u$ is 100.
                     each = 1), 
             y = unlist(ts_type$`daily count modified`), 
             main = "Peak-Over-Threshold plot Exceedances for Prince Philip, Duke of Edinburgh",
-            sub = paste("threshold =", 700), 
+            sub = paste("threshold =", 400), 
             xlab = "Observations", 
             ylab = "Threshold") 
  
- pot_points <- unlist(ts_type$`daily count modified`) > 700
+ pot_points <- unlist(ts_type$`daily count modified`) > 400
 
  points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
        y = unlist(ts_type$`daily count modified`)[pot_points], 
        col = "red")
 
  
- abline(abline(h = 700, col = "red"))
+ abline(abline(h = 400, col = "red"))
 
 ```
 
-## Winston Churchill {.tabset}
+### Winston Churchill {.tabset}
 
-### Distribution
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -788,7 +818,7 @@ The selected threshold $u$ is 100.
 
 ```
 
-### Mean Residual Plot
+#### Mean Residual Plot
 
 The selected threshold $u$ is 100.
 
@@ -806,7 +836,9 @@ The selected threshold $u$ is 100.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable.
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -835,9 +867,9 @@ The selected threshold $u$ is 100.
 
 ```
 
-## Diana, Princess of Wales {.tabset}
+### Diana, Princess of Wales {.tabset}
 
-### Distribution
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -853,7 +885,7 @@ The selected threshold $u$ is 100.
 
 ```
 
-### Mean Residual Plot
+#### Mean Residual Plot
 
 The selected threshold $u$ is 70.
 
@@ -871,7 +903,9 @@ The selected threshold $u$ is 70.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are not too few nor to many data points exceeding the threshold. Therefore, we assume that using the POT model is suitable.
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -899,9 +933,9 @@ The selected threshold $u$ is 70.
 
 ```
 
-## 2016 Summer Olympics {.tabset}
+### 2016 Summer Olympics {.tabset}
 
-### Distribution
+#### Distribution
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -917,7 +951,7 @@ The selected threshold $u$ is 70.
 
 ```
 
-### Mean Residual Plot
+#### Mean Residual Plot
 
 The selected threshold $u$ is 60.
 
@@ -935,7 +969,9 @@ The selected threshold $u$ is 60.
 
 ```
 
-### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot
+
+The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable.
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -963,8 +999,7 @@ The selected threshold $u$ is 60.
 
 ```
 
-Suitability of POT:
-- Princess Margaret, United Kingdom, United States (?), Wiston Churchill do not seem to be suitable for POT because of the too few numbers of exceedances.
+## 99-Quantile
 
 * Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty = provide an interval of values within which the true value  of the threshol is believed to lie with a stated probability (MSE ? with confidence interval ?)
 
@@ -1012,6 +1047,10 @@ data99
 
 ## Graphical Method
 
+The graphical method that we suggest for detecting simultaneous high traffic loads is a Block Maxima interactive plot colored by topic. This allows to visually see the daily maxima between the 12 different web pages. If for one or several days that display high maxima but also other value from other webpages that are just below, it indicates a simultaneous high load. 
+
+By pointing the mouse cursor over data points, more information is available. With this plot, we can observe that Princess Margret, Georges IV, and Prince Philip of Edinburgh have the largest simultaneous high loads around 2016 November 6, but also have another smaller simultaneous high loads in 2016 April 21. So the idea for Wikipedia is that if one of these web pages load is increasing they should do caching on the other ones to prevent exhausting of available resources.
+
 ```{r, echo=F, message=F, warning=F}
 
 library(extRemes)
@@ -1034,6 +1073,8 @@ ggplotly(c)
 ```
 
 ## Numerical Method
+
+For the numerical method, we compute a matrix of the tail dependence coefficients between the different web pages. We are interested in the values that are the closest to 1. They indicate that there is a high likelihood that if an extreme value in the tail arises for one web page, the other webpage is very likely to also display an extreme value in its high tail. Therefore, there is tail dependence and there is probably going to show a simultaneous high load for both (or more than two) pages. In this case, Wikipedia must anticipate and use the caching system on them.
 
 ```{r, echo=F, message=F, warning=F}
 
