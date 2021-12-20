@@ -271,6 +271,26 @@ The chosen threshold indicates that there are not too few data points exceeding 
 
 ```
 
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Density plot allows us to see the overall shape of the residual distribution, here it a Bimodal distribution.
+
+```{r, echo=F, warning=F, message=F}
+
+decluster_e2 <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 125)
+
+gpd_e2 <- extRemes::fevd(unlist(decluster_e2), 
+                      threshold = 125, 
+                      type = "GP")  
+
+
+par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
+
+plot(gpd_e2)
+
+```
 
 ### United States {.tabset}
 
@@ -336,6 +356,28 @@ The chosen threshold indicates that there are few data points exceeding the thre
 
  
  abline(abline(h = 35, col = "red"))
+
+```
+
+
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow quite well the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Density plot allows us to see the overall shape of the residual distribution, here it is a Bimodal distribution.
+
+```{r, echo=F, warning=F, message=F}
+
+decluster_us <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 35)
+
+gpd_us <- extRemes::fevd(unlist(decluster_us), 
+                      threshold = 35, 
+                      type = "GP")  
+
+
+par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
+
+plot(gpd_us)
 
 ```
 
@@ -406,6 +448,28 @@ The chosen threshold indicates that there are not too few nor too many data poin
 
 ```
 
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Density plot allows us to see the overall shape of the residual distribution, here it seems to be a Bimodal distribution.
+
+```{r, echo=F, warning=F, message=F}
+
+decluster_qv <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 100)
+
+gpd_qv <- extRemes::fevd(unlist(decluster_qv), 
+                      threshold = 100, 
+                      type = "GP")  
+
+
+par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
+
+plot(gpd_qv)
+
+```
+
+
 ### World War II {.tabset}
 
 #### Distribution
@@ -472,6 +536,28 @@ The chosen threshold indicates that there are not too few nor too many data poin
  abline(abline(h = 30, col = "red"))
 
 ```
+
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Density plot allows us to see the overall shape of the distribution, here the data seems right-skewed.
+
+```{r, echo=F, warning=F, message=F}
+
+decluster_ww2 <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 30)
+
+gpd_ww2 <- extRemes::fevd(unlist(decluster_ww2), 
+                      threshold = 30, 
+                      type = "GP")  
+
+
+par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
+
+plot(gpd_ww2)
+
+```
+
 
 ### World War I {.tabset}
 
@@ -540,6 +626,28 @@ The chosen threshold indicates that there are not too few nor too many data poin
 
 ```
 
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
+
+```{r, echo=F, warning=F, message=F}
+
+decluster_ww1 <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 25)
+
+gpd_ww1 <- extRemes::fevd(unlist(decluster_ww1), 
+                      threshold = 25, 
+                      type = "GP")  
+
+
+par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
+
+plot(gpd_ww1)
+
+```
+
+
 ### George VI {.tabset}
 
 #### Distribution
@@ -606,6 +714,28 @@ The chosen threshold indicates that there are too few data points exceeding the 
  abline(abline(h = 200, col = "red"))
 
 ```
+
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Density plot allows us to see the overall shape of the Residual distribution, here it seems to be a Bimodal distribution.
+
+```{r, echo=F, warning=F, message=F}
+
+decluster_g6 <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 200)
+
+gpd_g6 <- extRemes::fevd(unlist(decluster_g6), 
+                      threshold = 200, 
+                      type = "GP")  
+
+
+par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
+
+plot(gpd_g6)
+
+```
+
 
 ### United Kingdom {.tabset}
 
@@ -674,6 +804,28 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ```
 
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
+
+```{r, echo=F, warning=F, message=F}
+
+decluster_uk <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 50)
+
+gpd_uk <- extRemes::fevd(unlist(decluster_uk), 
+                      threshold = 50, 
+                      type = "GP")  
+
+
+par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
+
+plot(gpd_uk)
+
+```
+
+
 ### Princess Margaret, Countess of Snowdon {.tabset}
 
 #### Distribution
@@ -740,6 +892,28 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ```
 
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line whether in the bulk of the distribution or at the end.
+The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
+
+```{r, echo=F, warning=F, message=F}
+
+decluster_marg <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 700)
+
+gpd_marg <- extRemes::fevd(unlist(decluster_marg), 
+                      threshold = 700, 
+                      type = "GP")  
+
+
+par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
+
+plot(gpd_marg)
+
+```
+
+
 ### Prince Philip, Duke of Edinburgh {.tabset}
 
 #### Distribution
@@ -804,6 +978,28 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
  
  abline(abline(h = 400, col = "red"))
+
+```
+
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does not really follow closely the regression line whether in the bulk of the distribution or at the tail.
+The Density plot with the Empirical curve allows us to see the overall shape of the Residual distribution, here it is a Bimodal distribution.
+The Return Level plot is not showing because there are too few exceedences in this time series to predict the return levels.
+
+
+```{r, echo=F, warning=F, message=F}
+decluster_p <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 400)
+
+gpd_p <- extRemes::fevd(unlist(decluster_p), 
+                      threshold = 400, 
+                      type = "GP")  
+
+
+
+plot(gpd_p, 1)
+
 
 ```
 
@@ -874,6 +1070,29 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ```
 
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does not really follow closely the regression line whether in the bulk of the distribution or at the end.
+The Density plot with the Empirical curve allows us to see the overall shape of the Residual distribution, here it seems to be a Bimodal distribution.
+The Return Level plot is not showing because there are too few exceedences in this time series to predict the return levels.
+
+```{r, echo=F, warning=F, message=F}
+
+decluster_wch <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 100)
+
+gpd_wch <- extRemes::fevd(unlist(decluster_wch), 
+                      threshold = 100, 
+                      type = "GP")  
+
+
+par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
+
+plot(gpd_wch)
+
+```
+
+
 ### Diana, Princess of Wales {.tabset}
 
 #### Distribution
@@ -940,6 +1159,29 @@ The chosen threshold indicates that there are not too few nor to many data point
 
 ```
 
+
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Density plot allows us to see the overall shape of the Residual distribution, here the Residual distribution seems to be right-skewed.
+
+```{r, echo=F, warning=F, message=F}
+
+decluster_diana <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 70)
+
+gpd_diana <- extRemes::fevd(unlist(decluster_diana), 
+                      threshold = 70, 
+                      type = "GP")  
+
+
+par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
+
+plot(gpd_diana)
+
+```
+
+
 ### 2016 Summer Olympics {.tabset}
 
 #### Distribution
@@ -1005,6 +1247,28 @@ The chosen threshold indicates that there are too few data points exceeding the 
  abline(abline(h = 60, col = "red"))
 
 ```
+
+#### GPD Fit - Diagnostic Plot
+
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
+
+```{r, echo=F, warning=F, message=F}
+
+decluster_sumol <- extRemes::decluster(ts_type$`daily count modified`, 
+                                 threshold = 60)
+
+gpd_sumol <- extRemes::fevd(unlist(decluster_sumol), 
+                      threshold = 60, 
+                      type = "GP")  
+
+
+par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
+
+plot(gpd_sumol)
+
+```
+
 
 ## 99-Quantile
 
