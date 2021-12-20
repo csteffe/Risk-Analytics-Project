@@ -936,7 +936,7 @@ The selected threshold $u$ is 60.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
             filter(type == "2016_Summer_Olympics") 
@@ -961,6 +961,10 @@ The selected threshold $u$ is 60.
  abline(abline(h = 60, col = "red"))
 
 ```
+
+### Model
+
+``
 
 Suitability of POT:
 - Princess Margaret, United Kingdom, United States (?), Wiston Churchill do not seem to be suitable for POT because of the too few numbers of exceedances.
