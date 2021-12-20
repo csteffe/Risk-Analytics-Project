@@ -207,7 +207,7 @@ ts <- ts %>%
 
 The selected threshold $u$ is 125.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "Elizabeth_II") 
@@ -224,7 +224,7 @@ The selected threshold $u$ is 125.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
             filter(type == "Elizabeth_II") 
@@ -272,7 +272,7 @@ The selected threshold $u$ is 125.
 
 The selected threshold $u$ is 35.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "United_States") 
@@ -288,7 +288,7 @@ The selected threshold $u$ is 35.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
    filter(type == "United_States") 
@@ -337,7 +337,7 @@ The selected threshold $u$ is 35.
 
 The selected threshold $u$ is 100.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "Queen_Victoria") 
@@ -353,7 +353,7 @@ The selected threshold $u$ is 100.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
    filter(type == "Queen_Victoria") 
@@ -402,7 +402,7 @@ The selected threshold $u$ is 100.
 
 The selected threshold $u$ is 30.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "World_War_II") 
@@ -418,7 +418,7 @@ The selected threshold $u$ is 30.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
             filter(type == "World_War_II") 
@@ -467,7 +467,7 @@ The selected threshold $u$ is 30.
 
 The selected threshold $u$ is 25.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "World_War_I") 
@@ -483,7 +483,7 @@ The selected threshold $u$ is 25.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
    filter(type == "World_War_I") 
@@ -532,7 +532,7 @@ The selected threshold $u$ is 25.
 
 The selected threshold $u$ is 200.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "George_VI") 
@@ -548,7 +548,7 @@ The selected threshold $u$ is 200.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
    filter(type == "George_VI") 
@@ -597,7 +597,7 @@ The selected threshold $u$ is 200.
 
 The selected threshold $u$ is 50.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "United_Kingdom") 
@@ -613,7 +613,7 @@ The selected threshold $u$ is 50.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
             filter(type == "United_Kingdom") 
@@ -625,7 +625,7 @@ The selected threshold $u$ is 50.
                     each = 1), 
             y = unlist(ts_type$`daily count modified`), 
             main = paste("Peak-Over-Threshold plot Exceedances for United_Kingdom"),
-            sub = paste("threshold =", thresholds[i]), 
+            sub = paste("threshold =", 50), 
             xlab = "Observations", 
             ylab = "Threshold") 
  
@@ -662,7 +662,7 @@ The selected threshold $u$ is 50.
 
 The selected threshold $u$ is 700.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "Princess_Margaret,_Countess_of_Snowdon") 
@@ -678,7 +678,7 @@ The selected threshold $u$ is 700.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
             filter(type == "Princess_Margaret,_Countess_of_Snowdon") 
@@ -726,7 +726,7 @@ The selected threshold $u$ is 700.
 
 The selected threshold $u$ is 100.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "Prince_Philip,_Duke_of_Edinburgh") 
@@ -742,7 +742,7 @@ The selected threshold $u$ is 100.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
             filter(type == "Prince_Philip,_Duke_of_Edinburgh") 
@@ -753,7 +753,7 @@ The selected threshold $u$ is 100.
  plot(x = rep(1:nrow(ts_type), 
                     each = 1), 
             y = unlist(ts_type$`daily count modified`), 
-            main = paste("Peak-Over-Threshold plot Exceedances for Prince Philip, Duke of Edinburgh", typex),
+            main = "Peak-Over-Threshold plot Exceedances for Prince Philip, Duke of Edinburgh",
             sub = paste("threshold =", 700), 
             xlab = "Observations", 
             ylab = "Threshold") 
@@ -791,7 +791,7 @@ The selected threshold $u$ is 100.
 
 The selected threshold $u$ is 100.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "Winston_Churchill") 
@@ -807,7 +807,7 @@ The selected threshold $u$ is 100.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
             filter(type == "Winston_Churchill") 
@@ -856,7 +856,7 @@ The selected threshold $u$ is 100.
 
 The selected threshold $u$ is 70.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "Diana,_Princess_of_Wales") 
@@ -872,7 +872,7 @@ The selected threshold $u$ is 70.
 
 ### Peaks-Over-Threshold Plot
 
-```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+```{r, echo=F, warning=F, message=F}
 
  ts_type <- ts %>% 
             filter(type == "Diana,_Princess_of_Wales") 
@@ -920,7 +920,7 @@ The selected threshold $u$ is 70.
 
 The selected threshold $u$ is 60.
 
-```{r mean residual plot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
  ts_type <- ts %>% 
             filter(type == "2016_Summer_Olympics") 
@@ -977,9 +977,10 @@ Suitability of POT:
 
 library(evd)
 # data frame for the 99 quantile and measure of uncertainty for all the type
-
+thresholds <- c(60, 70, 125, 200, 100, 700, 100, 50, 35, 100, 25, 30)
 data99 <- data.frame(matrix(0, nrow = 2, ncol = length(unique(ts$type))))
 colnames(data99) <- unique(ts$type)
+rownames(data99) <- c("quantile99","uncertainty")
 
 
 for (i in 1:ncol(data99)){
@@ -1053,7 +1054,7 @@ gpd.model <- gpd(modified_NoNA$`daily count modified`, threshold = mean(threshol
 
 gpd.plot <- tailplot(gpd.model)
 
-gpd.sf <- gpd.sfall(gpd.plot,0.99)
+#gpd.sf <- gpd.sfall(gpd.plot,0.99)
 
 ```
 
