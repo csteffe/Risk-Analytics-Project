@@ -5,3 +5,11 @@ date: "`r Sys.Date()`"
 output: pdf_document
 ---
 
+```{r child = 'Practical 1.Rmd'}
+```
+
+```{r child = 'Practical 2.Rmd'}
+```
+
+```{r child = 'Practical 3.Rmd'}
+```
