@@ -273,7 +273,7 @@ The chosen threshold indicates that there are not too few data points exceeding 
 
 #### GPD Fit - Diagnostic Plot
 
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the residual distribution, here it a Bimodal distribution.
 
 ```{r, echo=F, warning=F, message=F}
@@ -362,7 +362,7 @@ The chosen threshold indicates that there are few data points exceeding the thre
 
 #### GPD Fit - Diagnostic Plot
 
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow quite well the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow quite well the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the residual distribution, here it is a Bimodal distribution.
 
 ```{r, echo=F, warning=F, message=F}
@@ -450,7 +450,7 @@ The chosen threshold indicates that there are not too few nor too many data poin
 
 #### GPD Fit - Diagnostic Plot
 
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the residual distribution, here it seems to be a Bimodal distribution.
 
 ```{r, echo=F, warning=F, message=F}
@@ -539,7 +539,7 @@ The chosen threshold indicates that there are not too few nor too many data poin
 
 #### GPD Fit - Diagnostic Plot
 
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the distribution, here the data seems right-skewed.
 
 ```{r, echo=F, warning=F, message=F}
@@ -628,7 +628,7 @@ The chosen threshold indicates that there are not too few nor too many data poin
 
 #### GPD Fit - Diagnostic Plot
 
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
 
 ```{r, echo=F, warning=F, message=F}
@@ -717,7 +717,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 #### GPD Fit - Diagnostic Plot
 
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here it seems to be a Bimodal distribution.
 
 ```{r, echo=F, warning=F, message=F}
@@ -806,7 +806,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 #### GPD Fit - Diagnostic Plot
 
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
 
 ```{r, echo=F, warning=F, message=F}
@@ -894,7 +894,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 #### GPD Fit - Diagnostic Plot
 
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line whether in the bulk of the distribution or at the end.
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line whether in the bulk of the distribution or at the end. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
 
 ```{r, echo=F, warning=F, message=F}
@@ -981,28 +981,6 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ```
 
-#### GPD Fit - Diagnostic Plot
-
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does not really follow closely the regression line whether in the bulk of the distribution or at the tail.
-The Density plot with the Empirical curve allows us to see the overall shape of the Residual distribution, here it is a Bimodal distribution.
-The Return Level plot is not showing because there are too few exceedences in this time series to predict the return levels.
-
-
-```{r, echo=F, warning=F, message=F}
-decluster_p <- extRemes::decluster(ts_type$`daily count modified`, 
-                                 threshold = 400)
-
-gpd_p <- extRemes::fevd(unlist(decluster_p), 
-                      threshold = 400, 
-                      type = "GP")  
-
-
-
-plot(gpd_p, 1)
-
-
-```
-
 ### Winston Churchill {.tabset}
 
 #### Distribution
@@ -1067,28 +1045,6 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
  
  abline(abline(h = 100, col = "red"))
-
-```
-
-#### GPD Fit - Diagnostic Plot
-
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does not really follow closely the regression line whether in the bulk of the distribution or at the end.
-The Density plot with the Empirical curve allows us to see the overall shape of the Residual distribution, here it seems to be a Bimodal distribution.
-The Return Level plot is not showing because there are too few exceedences in this time series to predict the return levels.
-
-```{r, echo=F, warning=F, message=F}
-
-decluster_wch <- extRemes::decluster(ts_type$`daily count modified`, 
-                                 threshold = 100)
-
-gpd_wch <- extRemes::fevd(unlist(decluster_wch), 
-                      threshold = 100, 
-                      type = "GP")  
-
-
-par(mfrow=c(2,2)) # Change the panel layout to 2 x 2
-
-plot(gpd_wch)
 
 ```
 
@@ -1162,7 +1118,7 @@ The chosen threshold indicates that there are not too few nor to many data point
 
 #### GPD Fit - Diagnostic Plot
 
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here the Residual distribution seems to be right-skewed.
 
 ```{r, echo=F, warning=F, message=F}
@@ -1250,7 +1206,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 #### GPD Fit - Diagnostic Plot
 
-The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail.
+The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
 
 ```{r, echo=F, warning=F, message=F}
