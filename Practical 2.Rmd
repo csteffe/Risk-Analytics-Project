@@ -8,7 +8,7 @@ output:
 ---
 
 
-```{r}
+```{r, echo=F, warning=F, message=F}
 library(here)
 library(quantmod)  
 library(dplyr)
@@ -22,7 +22,7 @@ load(file = here::here("stocks.Rdata"))
 ```
 
 
-```{r}
+```{r, echo=F, warning=F, message=F}
 
   #rect()
 # fig.rect <- stocks %>% plot_ly( x = ~stocks$ref.date, type = "candlestick",
@@ -43,7 +43,7 @@ fig.seg <- fig.seg %>% rangeslider()
 fig.seg
 ```
 
-```{r}
+```{r, echo=F, warning=F, message=F}
 dif.stocks <- unique(stocks$ticker)
 
 for (i in 1:length(dif.stocks)){
@@ -61,7 +61,7 @@ print(fig.rect)
 
 b) 
 
-```{r}
+```{r, echo=F, warning=F, message=F}
 
 forth_log <- stocks
 
@@ -83,7 +83,7 @@ log_returns %>% ggplot(aes(x = ref.date, y = neg_log_returns ))+geom_line()+face
 
 c)
 
-```{r}
+```{r, echo=F, warning=F, message=F}
 
 library(extRemes)
 
@@ -114,7 +114,7 @@ abline(h = threshold, col = "red")
 ```
 
 We will now fit our stocks data of the upper tail beyond the chosen threshold of 0.05 to a GPD method.
-```{r}
+```{r, echo=F, warning=F, message=F}
 library(ismev)
 
 # Fit our data of the upper tail beyond threshold of 0.05 to a GPD
@@ -128,7 +128,7 @@ By using the POT approach, we built a model for high values of the negative log-
 
 d)
 
-```{r}
+```{r, echo=F, warning=F, message=F}
 library(ggplot2)
 
 
