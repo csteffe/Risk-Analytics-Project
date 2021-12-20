@@ -177,7 +177,7 @@ ts <- ts %>%
 
 ```
 
-# Peaks-Over-Threshold {. tabset}
+# Peaks-Over-Threshold {.tabset}
 
 1) Examine the suitability for each time series $R_i$ separately:
 
@@ -185,7 +185,7 @@ ts <- ts %>%
 
 * **Mean Residual Plot**: The following plots are used to choose the most adequate thresholds. Ideed, the value of $u$ from which the plot becomes approximately linear can generally be selected as the optimal threshold
 
-## Elizabeth II {. tabset}
+## Elizabeth II {.tabset}
 
 ### Distribution
 
@@ -250,7 +250,7 @@ The selected threshold $u$ is 125.
 
 ```
 
-## United States {. tabset}
+## United States {.tabset}
 
 ### Distribution
 
@@ -315,7 +315,7 @@ The selected threshold $u$ is 35.
 
 ```
 
-## Queen Victoria {. tabset}
+## Queen Victoria {.tabset}
 
 ### Distribution
 
@@ -380,7 +380,7 @@ The selected threshold $u$ is 100.
 
 ```
 
-## World War II {. tabset}
+## World War II {.tabset}
 
 ### Distribution
 
@@ -445,7 +445,7 @@ The selected threshold $u$ is 30.
 
 ```
 
-## World War I {. tabset}
+## World War I {.tabset}
 
 ### Distribution
 
@@ -510,7 +510,7 @@ The selected threshold $u$ is 25.
 
 ```
 
-## George VI {. tabset}
+## George VI {.tabset}
 
 ### Distribution
 
@@ -575,7 +575,7 @@ The selected threshold $u$ is 200.
 
 ```
 
-## United Kingdom {. tabset}
+## United Kingdom {.tabset}
 
 ### Distribution
 
@@ -640,7 +640,7 @@ The selected threshold $u$ is 50.
 
 ```
 
-## Princess Margaret, Countess of Snowdon {. tabset}
+## Princess Margaret, Countess of Snowdon {.tabset}
 
 ### Distribution
 
@@ -704,7 +704,7 @@ The selected threshold $u$ is 700.
 
 ```
 
-## Prince Philip, Duke of Edinburgh {. tabset}
+## Prince Philip, Duke of Edinburgh {.tabset}
 
 ### Distribution
 
@@ -769,7 +769,7 @@ The selected threshold $u$ is 100.
 
 ```
 
-## Winston Churchill {. tabset}
+## Winston Churchill {.tabset}
 
 ### Distribution
 
@@ -834,7 +834,7 @@ The selected threshold $u$ is 100.
 
 ```
 
-## Diana, Princess of Wales {. tabset}
+## Diana, Princess of Wales {.tabset}
 
 ### Distribution
 
@@ -898,7 +898,7 @@ The selected threshold $u$ is 70.
 
 ```
 
-## 2016 Summer Olympics {. tabset}
+## 2016 Summer Olympics {.tabset}
 
 ### Distribution
 
@@ -962,7 +962,7 @@ The selected threshold $u$ is 60.
 
 ```
 
-### Model
+## Model
 
 ``
 
@@ -1009,7 +1009,7 @@ for (i in 1:ncol(data99)){
  data99[2,i] <- uncertainty$std.err[1]
 }
 
-
+data99
 ```
 
 
