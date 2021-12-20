@@ -1,4 +1,5 @@
 ---
+title: "Practical 1"
 output:
   html_document: default
 ---
@@ -263,23 +264,13 @@ return.level(gpd,
 
 ```
 
-```{r return levels with GDP, echo=F, warning=F, message=F}
+```{r return levels with GDP 2, echo=F, warning=F, message=F}
 
 niveau.ts$year <- floor_date(niveau.ts$Zeitpunkt_des_Auftretens, "year") # Fct that convert data
 
 niveau.ts2 <- niveau.ts %>%
               group_by(year) %>%
               summarize(mean = mean(niveau.ts$Wert)) # Compute mean of water levels for yearly data
-
-decluster2 <- extRemes::decluster(niveau.ts2$mean, 
-                                 threshold = 327)
-
-gpd2 <- extRemes::fevd(unlist(decluster2), 
-                      threshold = threshold, 
-                      type = "GP")   
-
-return.level(gpd2,
-             return.period = c(50, 100))
 
 ```
 
