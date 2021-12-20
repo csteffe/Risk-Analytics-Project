@@ -429,7 +429,7 @@ gpd.model <- gpd(modified_NoNA$`daily count modified`, threshold = mean(threshol
 
 gpd.plot <- tailplot(gpd.model)
 
-#gpd.sf <- gpd.sfall(gpd.plot,0.99)
+gpd.sf <- gpd.sfall(gpd.plot,0.99)
 
 ```
 
@@ -439,8 +439,7 @@ library(FRAPO)
 
 modified_pivot <- modified_NoNA %>% pivot_wider(values_from =`daily count modified`, names_from = type,date)
 
-cov.mat <- cov(modified_pivot[,-1])
 
-tdc(cov.mat, method = "EVT")
+tdc(modified_pivot[,-1], method = "EVT")
 ```
 
