@@ -196,6 +196,8 @@ Knowing that the data is right-skewed we generate the time series' **Mean Residu
 
 After setting their theoretical optimal threshold, we plot their **Peaks-Over-Threshold Plot** with their threshold $u$ to display the exceedences. Note that if a threshold is too low then the extreme value approach cannot be valid and that if it is too high we cannot obtain insightful results because of too few data.
 
+For the following modified time series where the POT is not suitable, we suggest using a Block Maxima approach. 
+
 ### Elizabeth II {.tabset}
 
 #### Distribution
@@ -1001,7 +1003,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ## 99-Quantile
 
-* Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty = provide an interval of values within which the true value  of the threshol is believed to lie with a stated probability (MSE ? with confidence interval ?)
+The following outcome shows the 99%-quantile and uncertainty measures of the modified daily count modified for each time series. To generate these results we use the *quantile* function of the *stats* package and the standard error of the peaks-over-threshold model. 
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -1051,6 +1053,8 @@ The graphical method that we suggest for detecting simultaneous high traffic loa
 
 By pointing the mouse cursor over data points, more information is available. With this plot, we can observe that Princess Margret, Georges IV, and Prince Philip of Edinburgh have the largest simultaneous high loads around 2016 November 6, but also have another smaller simultaneous high loads in 2016 April 21. So the idea for Wikipedia is that if one of these web pages load is increasing they should do caching on the other ones to prevent exhausting of available resources.
 
+Another alternative method would be to generate scatter plots to visualize how two distributions move together. 
+
 ```{r, echo=F, message=F, warning=F}
 
 library(extRemes)
@@ -1074,7 +1078,9 @@ ggplotly(c)
 
 ## Numerical Method
 
-For the numerical method, we compute a matrix of the tail dependence coefficients between the different web pages. We are interested in the values that are the closest to 1. They indicate that there is a high likelihood that if an extreme value in the tail arises for one web page, the other webpage is very likely to also display an extreme value in its high tail. Therefore, there is tail dependence and there is probably going to show a simultaneous high load for both (or more than two) pages. In this case, Wikipedia must anticipate and use the caching system on them.
+For the numerical method, we compute a matrix of the tail dependence coefficients between the different web pages. We are interested in the values that are the closest to 1. They indicate that there is a high likelihood that if an extreme value in the tail arises for one web page, the other webpage is very likely to also display an extreme value in its high tail. Therefore, there is tail dependence and there is probably going to show a simultaneous high load for both (or more than two) pages. In this case, Wikipedia must anticipate and use the caching system on them. 
+
+Here, we use the *tdc* function form the *FRAPO* package. 
 
 ```{r, echo=F, message=F, warning=F}
 
