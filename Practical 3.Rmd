@@ -14,6 +14,8 @@ library(ggplot2)
 library(fpp3)
 library(ggthemes)
 
+options(scipen=999)
+
 # Read in the data
 load(file = here::here("traffic.Rdata"))
 
@@ -84,60 +86,26 @@ ts_plot <- pageviews_ts %>%
            #theme_economist_white() # we can change the theme for something cooler ? 
 
 ggplotly(ts_plot) %>% 
-  config(displayModeBar = T) # can we add the woom opt on the x axis ? 
-  
-# NEED IMPROVEMENT UNREADABLE 
+  config(displayModeBar = T) 
   
 ```
+## Bar plot
 
-## Seasonal plot
+```{r bar plot, echo=F, message=F, warning=F}
 
-If we see a seasonality, the time series is not stationary (i.e. does not depend on the time of the observation). 
-
-```{r seasonal plot, echo=F, message=F, warning=F}
-
-library(tsibble)
-
-# Fill time gaps
-pageviews_nogaps <- pageviews_ts %>%
-                    fill_gaps()
-
+pageviews_ts %>% 
+  ggplot() + 
+  geom_histogram(aes(x = dailycount), na.rm = TRUE) + 
+  geom_vline(xintercept = mean (pageviews_ts$dailycount, na.rm = TRUE))
+         
 ```
-
-### Elizabeth_II
-
-Je sais pas pk ca tourne pdt mille ans sans voir le résultat
-
-```{r seasonal Elizabeth_II, echo=F, message=F, warning=F}
-
-library(feasts)
-
-# Seasonal plot
-eliz_seasonal <- pageviews_nogaps %>% 
-                 filter(type == "Elizabeth_II") %>%
-                 gg_season(y = dailycount) 
-
-# Subseries
-eliz_sub <- pageviews_nogaps %>% 
-            filter(type == "Elizabeth_II") %>%
-            gg_subseries(y = dailycount) 
-
-
-
-```
-
-- time series decompostion
-
-## Autocorrelation plot
-
-Autocorrelation quantifies the relationship between lagged values of a time series.
 
 # Modified Series
 
 $$
 R_i = \frac{X_i - X_{i-7}}{X_{i-7}} * 100
 $$
-$R_i$ is the modified time series where each series (above $R_8$) of pageviews is the relative percentage change time series between one observation at time $i$ and the seventh before $i-7$ ?
+$R_i$ is the relative weekly change (increase or decrease) in percentage.
 
 ```{r modified time series, echo=F, message=F, warning=F}
 
@@ -185,7 +153,7 @@ modifiedts_plot <- modified_ts %>%
   
                    labs(title = "Modified Time Series: Web Traffic",
                         x = "Time of Occurrence [1D]", 
-                        y = "Modified Daily count",
+                        y = "Modified Daily count (%)",
                         fill = type)  +
           
                    theme_economist_white() # we can change the theme for something cooler ? 
@@ -193,7 +161,7 @@ modifiedts_plot <- modified_ts %>%
 ggplotly(modifiedts_plot) %>% 
   config(displayModeBar = T) # can we add the woom opt on the x axis ? 
   
-# NEED IMPROVEMENT UNREADABLE 
+
 
 ```
 
@@ -209,113 +177,121 @@ ts <- ts %>%
 
 ```
 
-## 2016_Summer_Olympics
+# Peaks-Over-Threshold {. tabset}
 
-To compare the time series before and after modification 
+1) Examine the suitability for each time series $R_i$ separately:
 
-```{r relative change 2016_Summer_Olympics, echo=F, message=F, warning=F}
+2)  Explain your choice of threshold and briefly comment on the diagnostic plots for each model: 
 
+* **Mean Residual Plot**: The following plots are used to choose the most adequate thresholds. Ideed, the value of $u$ from which the plot becomes approximately linear can generally be selected as the optimal threshold
 
+## Elizabeth II {. tabset}
 
-# solution to align the 0 : https://stackoverflow.com/questions/52443673/one-zeroline-for-two-y-axis-in-plotly
+### Distribution
 
-tss <- ts %>%
-       filter(type == "2016_Summer_Olympics")
-
-yaxis1 <- list(zeroline = TRUE,
-               range = c(min(tss$`daily count modified`, na.rm = TRUE),max(tss$`daily count modified`, na.rm = TRUE))
-)
-
-yaxis2 <- list(
-    tickfont= list(color = "orange"),
-    overlaying="y",
-    side="right",
-    title="daily count",
-    zeroline = TRUE,
-    range = c(min(tss$`daily count modified`, na.rm = TRUE),max(tss$dailycount, na.rm = TRUE))
-)
-
-plot_ly(tss,width = 800, height = 350) %>% 
-add_lines(x = ~date, 
-          y= ~`daily count modified`, 
-          name = "daily count modified") %>%
-add_lines(x = ~date, 
-          y = ~dailycount, 
-          name = "daily count",
-          yaxis = "y2") %>%
-  layout(title = "daily count for 2016 summery Olympics", yaxis = yaxis1 ,
-         yaxis2 = yaxis2) %>% 
-  config(displayModeBar = FALSE)
-
-
-
-
-
-
-```
-
-# Peaks-Over-Threshold
-
-- Examine the suitability for each time series $R_i$ separately
-- Explain your choice of threshold and briefly comment on the diagnostic plots for each model
-
-```{r qqplot, echo=F, message=F, warning=F}
+```{r, echo=F, message=F, warning=F}
 
 # qqplot by types ( two ways)
 
-types <- unique(ts$type)
- 
-# one plot per type
-for (typex in types){
-  
  ts_type <- ts %>% 
-   filter(type == typex) 
+   filter(type == "Elizabeth_II") 
  
-  qqnorm(ts_type$`daily count modified`,
-       ylab = "Latitude of Seismic Events",
-       col = "purple")
-  
-  
   ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
   geom_qq(color = "pink") +
   geom_qq_line(color = "dark green") +
-  labs(y = "Latitude of Seismic Events") %>% print ()
-  
-}
+  labs(y = "Daily Count")
 
 ```
+
+### Mean Residual Plot
+
+The selected threshold $u$ is 125.
 
 ```{r mean residual plot, echo=F, message=F, warning=F}
 
-types <- unique(ts$type)
- 
-for (typex in types){
-  
  ts_type <- ts %>% 
-   filter(type == typex) 
+            filter(type == "Elizabeth_II") 
  
  ts_type <- ts_type %>% 
-   filter(!is.na(`daily count modified`))
+            filter(!is.na(`daily count modified`))
  
   # Mean Residual Life Plot (MRLP)
   extRemes::mrlplot(ts_type$`daily count modified`,
-                  main = paste("Mean Residual Life Plot: Mean Excess Function for", typex))
-}
+                    main = "Mean Residual Life Plot: Mean Excess Function for Elizabeth_II")
+
 
 ```
 
+### Peaks-Over-Threshold Plot
+
 ```{r peak-over-threshold plot, echo=F, warning=F, message=F}
 
-types <- unique(ts$type)
-
-thresholds <- c(60, 70, 125, 200, 100, 700, 100, 50, 35, 100, 25, 30)
-
-i <- 1
-
-for (typex in types){
-  
  ts_type <- ts %>% 
-   filter(type == typex) 
+            filter(type == "Elizabeth_II") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for Elizabeth II"),
+            sub = paste("threshold =", 125), 
+            xlab = "Observations", 
+            ylab = "Threshold") 
+ 
+ pot_points <- unlist(ts_type$`daily count modified`) > 125
+
+ points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
+       y = unlist(ts_type$`daily count modified`)[pot_points], 
+       col = "red")
+
+ abline(abline(h = 125, col = "red"))
+
+```
+
+## United States {. tabset}
+
+### Distribution
+
+```{r, echo=F, message=F, warning=F}
+
+# qqplot by types ( two ways)
+
+ ts_type <- ts %>% 
+   filter(type == "United_States") 
+ 
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Daily Count")
+
+```
+
+### Mean Residual Plot
+
+The selected threshold $u$ is 35.
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
+ ts_type <- ts %>% 
+            filter(type == "United_States") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                    main = "Mean Residual Life Plot: Mean Excess Function for United_States")
+
+```
+
+### Peaks-Over-Threshold Plot
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+ ts_type <- ts %>% 
+   filter(type == "United_States") 
  
  ts_type <- ts_type %>% 
    filter(!is.na(`daily count modified`))
@@ -323,25 +299,669 @@ for (typex in types){
  plot(x = rep(1:nrow(ts_type), 
                     each = 1), 
             y = unlist(ts_type$`daily count modified`), 
-            main = paste("Peak-Over-Threshold plot Exceedances for : ", typex),
-            sub = paste("threshold =", thresholds[i]), 
+            main = paste("Peak-Over-Threshold plot Exceedances for United States"),
+            sub = paste("threshold =", 35), 
             xlab = "Observations", 
             ylab = "Threshold") 
  
- pot_points <- unlist(ts_type$`daily count modified`) > thresholds[i]
+ pot_points <- unlist(ts_type$`daily count modified`) > 35
 
  points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
        y = unlist(ts_type$`daily count modified`)[pot_points], 
        col = "red")
 
  
- abline(abline(h = thresholds[i], col = "red"))
- 
- i <- i+1
- 
-}
+ abline(abline(h = 35, col = "red"))
 
 ```
+
+## Queen Victoria {. tabset}
+
+### Distribution
+
+```{r, echo=F, message=F, warning=F}
+
+# qqplot by types ( two ways)
+
+ ts_type <- ts %>% 
+   filter(type == "Queen_Victoria") 
+ 
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Daily Count")
+
+```
+
+### Mean Residual Plot 
+
+The selected threshold $u$ is 100.
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
+ ts_type <- ts %>% 
+            filter(type == "Queen_Victoria") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                    main = "Mean Residual Life Plot: Mean Excess Function for Queen_Victoria")
+
+```
+
+### Peaks-Over-Threshold Plot
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+ ts_type <- ts %>% 
+   filter(type == "Queen_Victoria") 
+ 
+ ts_type <- ts_type %>% 
+   filter(!is.na(`daily count modified`))
+
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for Queen Victoria"),
+            sub = paste("threshold =", 100), 
+            xlab = "Observations", 
+            ylab = "Threshold") 
+ 
+ pot_points <- unlist(ts_type$`daily count modified`) > 100
+
+ points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
+       y = unlist(ts_type$`daily count modified`)[pot_points], 
+       col = "red")
+
+ 
+ abline(abline(h = 100, col = "red"))
+
+```
+
+## World War II {. tabset}
+
+### Distribution
+
+```{r, echo=F, message=F, warning=F}
+
+# qqplot by types ( two ways)
+
+ ts_type <- ts %>% 
+   filter(type == "World_War_II") 
+ 
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Daily Count")
+
+```
+
+### Mean Residual Plot
+
+The selected threshold $u$ is 30.
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
+ ts_type <- ts %>% 
+            filter(type == "World_War_II") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                    main = "Mean Residual Life Plot: Mean Excess Function for World_War_II")
+
+```
+
+### Peaks-Over-Threshold Plot
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+ ts_type <- ts %>% 
+            filter(type == "World_War_II") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for World War II"),
+            sub = paste("threshold =", 30), 
+            xlab = "Observations", 
+            ylab = "Threshold") 
+ 
+ pot_points <- unlist(ts_type$`daily count modified`) > 30
+
+ points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
+       y = unlist(ts_type$`daily count modified`)[pot_points], 
+       col = "red")
+
+ 
+ abline(abline(h = 30, col = "red"))
+
+```
+
+## World War I {. tabset}
+
+### Distribution
+
+```{r, echo=F, message=F, warning=F}
+
+# qqplot by types ( two ways)
+
+ ts_type <- ts %>% 
+   filter(type == "World_War_I") 
+ 
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Daily Count")
+
+```
+
+### Mean Residual Plot
+
+The selected threshold $u$ is 25.
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
+ ts_type <- ts %>% 
+            filter(type == "World_War_I") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                    main = "Mean Residual Life Plot: Mean Excess Function for World_War_I")
+
+```
+
+### Peaks-Over-Threshold Plot
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+ ts_type <- ts %>% 
+   filter(type == "World_War_I") 
+ 
+ ts_type <- ts_type %>% 
+   filter(!is.na(`daily count modified`))
+
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for World War I"),
+            sub = paste("threshold =", 25), 
+            xlab = "Observations", 
+            ylab = "Threshold") 
+ 
+ pot_points <- unlist(ts_type$`daily count modified`) > 25
+
+ points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
+       y = unlist(ts_type$`daily count modified`)[pot_points], 
+       col = "red")
+
+ 
+ abline(abline(h = 25, col = "red"))
+
+```
+
+## George VI {. tabset}
+
+### Distribution
+
+```{r, echo=F, message=F, warning=F}
+
+# qqplot by types ( two ways)
+
+ ts_type <- ts %>% 
+   filter(type == "George_VI") 
+ 
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Daily Count")
+
+```
+
+### Mean Residual Plot
+
+The selected threshold $u$ is 200.
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
+ ts_type <- ts %>% 
+            filter(type == "George_VI") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                    main = "Mean Residual Life Plot: Mean Excess Function for George_VI")
+
+```
+
+### Peaks-Over-Threshold Plot
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+ ts_type <- ts %>% 
+   filter(type == "George_VI") 
+ 
+ ts_type <- ts_type %>% 
+   filter(!is.na(`daily count modified`))
+
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for George VI"),
+            sub = paste("threshold =", 200), 
+            xlab = "Observations", 
+            ylab = "Threshold") 
+ 
+ pot_points <- unlist(ts_type$`daily count modified`) > 200
+
+ points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
+       y = unlist(ts_type$`daily count modified`)[pot_points], 
+       col = "red")
+
+ 
+ abline(abline(h = 200, col = "red"))
+
+```
+
+## United Kingdom {. tabset}
+
+### Distribution
+
+```{r, echo=F, message=F, warning=F}
+
+# qqplot by types ( two ways)
+
+ ts_type <- ts %>% 
+            filter(type == "United_Kingdom") 
+ 
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Daily Count")
+
+```
+
+### Mean Residual Plot
+
+The selected threshold $u$ is 50.
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
+ ts_type <- ts %>% 
+            filter(type == "United_Kingdom") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                    main = "Mean Residual Life Plot: Mean Excess Function for United_Kingdom")
+
+```
+
+### Peaks-Over-Threshold Plot
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+ ts_type <- ts %>% 
+            filter(type == "United_Kingdom") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for United_Kingdom"),
+            sub = paste("threshold =", thresholds[i]), 
+            xlab = "Observations", 
+            ylab = "Threshold") 
+ 
+ pot_points <- unlist(ts_type$`daily count modified`) > 50
+
+ points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
+       y = unlist(ts_type$`daily count modified`)[pot_points], 
+       col = "red")
+
+ 
+ abline(abline(h = 50, col = "red"))
+
+```
+
+## Princess Margaret, Countess of Snowdon {. tabset}
+
+### Distribution
+
+```{r, echo=F, message=F, warning=F}
+
+# qqplot by types ( two ways)
+
+ ts_type <- ts %>% 
+            filter(type == "Princess_Margaret,_Countess_of_Snowdon") 
+ 
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Daily Count")
+
+```
+
+### Mean Residual Plot
+
+The selected threshold $u$ is 700.
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
+ ts_type <- ts %>% 
+            filter(type == "Princess_Margaret,_Countess_of_Snowdon") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                    main = "Mean Residual Life Plot: Mean Excess Function for Princess_Margaret,_Countess_of_Snowdon")
+
+```
+
+### Peaks-Over-Threshold Plot
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+ ts_type <- ts %>% 
+            filter(type == "Princess_Margaret,_Countess_of_Snowdon") 
+ 
+ ts_type <- ts_type %>% 
+   filter(!is.na(`daily count modified`))
+
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for Princess Margaret, Countess of Snowdon"),
+            sub = paste("threshold =", 700), 
+            xlab = "Observations", 
+            ylab = "Threshold") 
+ 
+ pot_points <- unlist(ts_type$`daily count modified`) > 700
+
+ points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
+       y = unlist(ts_type$`daily count modified`)[pot_points], 
+       col = "red")
+
+ abline(abline(h = 700, col = "red"))
+
+```
+
+## Prince Philip, Duke of Edinburgh {. tabset}
+
+### Distribution
+
+```{r, echo=F, message=F, warning=F}
+
+# qqplot by types ( two ways)
+
+ ts_type <- ts %>% 
+            filter(type == "Prince_Philip,_Duke_of_Edinburgh") 
+ 
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Daily Count")
+
+```
+
+### Mean Residual Plot
+
+The selected threshold $u$ is 100.
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
+ ts_type <- ts %>% 
+            filter(type == "Prince_Philip,_Duke_of_Edinburgh") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                    main = "Mean Residual Life Plot: Mean Excess Function for Prince_Philip,_Duke_of_Edinburgh")
+
+```
+
+### Peaks-Over-Threshold Plot
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+ ts_type <- ts %>% 
+            filter(type == "Prince_Philip,_Duke_of_Edinburgh") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for Prince Philip, Duke of Edinburgh", typex),
+            sub = paste("threshold =", 700), 
+            xlab = "Observations", 
+            ylab = "Threshold") 
+ 
+ pot_points <- unlist(ts_type$`daily count modified`) > 700
+
+ points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
+       y = unlist(ts_type$`daily count modified`)[pot_points], 
+       col = "red")
+
+ 
+ abline(abline(h = 700, col = "red"))
+
+```
+
+## Winston Churchill {. tabset}
+
+### Distribution
+
+```{r, echo=F, message=F, warning=F}
+
+# qqplot by types ( two ways)
+
+ ts_type <- ts %>% 
+   filter(type == "Winston_Churchill") 
+ 
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Daily Count")
+
+```
+
+### Mean Residual Plot
+
+The selected threshold $u$ is 100.
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
+ ts_type <- ts %>% 
+            filter(type == "Winston_Churchill") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                    main = "Mean Residual Life Plot: Mean Excess Function for Winston_Churchill")
+
+```
+
+### Peaks-Over-Threshold Plot
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+ ts_type <- ts %>% 
+            filter(type == "Winston_Churchill") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for Winston Churchill"),
+            sub = paste("threshold =", 100), 
+            xlab = "Observations", 
+            ylab = "Threshold") 
+ 
+ pot_points <- unlist(ts_type$`daily count modified`) > 100
+
+ points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
+       y = unlist(ts_type$`daily count modified`)[pot_points], 
+       col = "red")
+
+ 
+ abline(abline(h = 100, col = "red"))
+
+```
+
+## Diana, Princess of Wales {. tabset}
+
+### Distribution
+
+```{r, echo=F, message=F, warning=F}
+
+# qqplot by types ( two ways)
+
+ ts_type <- ts %>% 
+            filter(type == "Diana,_Princess_of_Wales") 
+ 
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Daily Count")
+
+```
+
+### Mean Residual Plot
+
+The selected threshold $u$ is 70.
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
+ ts_type <- ts %>% 
+            filter(type == "Diana,_Princess_of_Wales") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                    main = "Mean Residual Life Plot: Mean Excess Function for Diana,_Princess_of_Wales")
+
+```
+
+### Peaks-Over-Threshold Plot
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+ ts_type <- ts %>% 
+            filter(type == "Diana,_Princess_of_Wales") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for Diana, Princess of Wales"),
+            sub = paste("threshold =", 70), 
+            xlab = "Observations", 
+            ylab = "Threshold") 
+ 
+ pot_points <- unlist(ts_type$`daily count modified`) > 70
+
+ points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
+       y = unlist(ts_type$`daily count modified`)[pot_points], 
+       col = "red")
+
+ abline(abline(h = 70, col = "red"))
+
+```
+
+## 2016 Summer Olympics {. tabset}
+
+### Distribution
+
+```{r, echo=F, message=F, warning=F}
+
+# qqplot by types ( two ways)
+
+ ts_type <- ts %>% 
+            filter(type == "2016_Summer_Olympics") 
+ 
+  ggplot(data = ts_type, aes(sample = `daily count modified`)) + 
+  geom_qq(color = "pink") +
+  geom_qq_line(color = "dark green") +
+  labs(y = "Daily Count")
+
+```
+
+### Mean Residual Plot
+
+The selected threshold $u$ is 60.
+
+```{r mean residual plot, echo=F, message=F, warning=F}
+
+ ts_type <- ts %>% 
+            filter(type == "2016_Summer_Olympics") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+ 
+  # Mean Residual Life Plot (MRLP)
+  extRemes::mrlplot(ts_type$`daily count modified`,
+                    main = "Mean Residual Life Plot: Mean Excess Function for 2016_Summer_Olympics")
+
+```
+
+### Peaks-Over-Threshold Plot
+
+```{r peak-over-threshold plot, echo=F, warning=F, message=F}
+
+ ts_type <- ts %>% 
+            filter(type == "2016_Summer_Olympics") 
+ 
+ ts_type <- ts_type %>% 
+            filter(!is.na(`daily count modified`))
+
+ plot(x = rep(1:nrow(ts_type), 
+                    each = 1), 
+            y = unlist(ts_type$`daily count modified`), 
+            main = paste("Peak-Over-Threshold plot Exceedances for 2016 Summer Olympics"),
+            sub = paste("threshold =", 60), 
+            xlab = "Observations", 
+            ylab = "Threshold") 
+ 
+ pot_points <- unlist(ts_type$`daily count modified`) > 60
+
+ points(x = rep(1:nrow(ts_type), each = 1)[pot_points], 
+       y = unlist(ts_type$`daily count modified`)[pot_points], 
+       col = "red")
+
+ abline(abline(h = 60, col = "red"))
+
+```
+
 Suitability of POT:
 - Princess Margaret, United Kingdom, United States (?), Wiston Churchill do not seem to be suitable for POT because of the too few numbers of exceedances.
 
