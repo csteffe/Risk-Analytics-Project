@@ -150,6 +150,8 @@ By using the POT approach, we built a model for high values of the negative log-
 
 d)
 
+Now we compute the 95% value at risk and we plot this value on a histogram
+
 ```{r, echo=F, warning=F, message=F}
 library(ggplot2)
 
