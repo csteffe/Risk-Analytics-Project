@@ -21,7 +21,10 @@ library(tidyquant)
 load(file = here::here("stocks.Rdata"))
 ```
 
+# Candlestick plot  
 
+
+Below is displayed the candlestick plot including the 4 stocks prices. As Amazon in comparison, has a much higher stock price you can use the zoom to see the 3 other stocks prices evolution over time.  
 ```{r, echo=F, warning=F, message=F}
 
   #rect()
@@ -43,6 +46,9 @@ fig.seg <- fig.seg %>% rangeslider()
 fig.seg
 ```
 
+# Candelstick with the 4 stock prices separetely
+
+
 ```{r, echo=F, warning=F, message=F}
 dif.stocks <- unique(stocks$ticker)
 
@@ -59,7 +65,7 @@ print(fig.rect)
 ```
 
 
-b) 
+# log returns plot for the 4 stock prices
 
 ```{r, echo=F, warning=F, message=F}
 
