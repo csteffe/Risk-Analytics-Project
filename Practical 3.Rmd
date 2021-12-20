@@ -250,6 +250,30 @@ The selected threshold $u$ is 125.
 
 ```
 
+## Model Diagnostic
+
+```{r, echo=F, message=F, warning=F}
+
+# numerical method 
+# GDP model ?
+#https://rdrr.io/cran/evir/man/gpd.html
+library(evir)
+
+modified_NoNA <- modified_ts %>% filter(!is.na(`daily count modified`))
+
+ElizII <- modified_NoNA %>%
+          filter(type == "Elizabeth_II")
+
+gpd_model_ElizII <- gpd(ElizII$`daily count modified`, threshold = 125)
+
+par(mfrow = c(2,2)) # Change the panel layout to 2 x 2
+plot(gpd_model_ElizII)
+
+#gpd_plot_ElizII <- tailplot(gpd_model_ElizII)
+#gpd.sf <- gpd.sfall(gpd.plot,0.99)
+
+```
+
 ## United States {.tabset}
 
 ### Distribution
@@ -962,26 +986,20 @@ The selected threshold $u$ is 60.
 
 ```
 
-## Model
-
-``
-
 Suitability of POT:
 - Princess Margaret, United Kingdom, United States (?), Wiston Churchill do not seem to be suitable for POT because of the too few numbers of exceedances.
 
+* Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty = provide an interval of values within which the true value  of the threshol is believed to lie with a stated probability (MSE ? with confidence interval ?)
 
-
-- Estimate the 99%-quantile of each series and give a corresponding measure of uncertainty = provide an interval of values within which the true value  of the threshol is believed to lie with a stated probability (MSE ? with confidence interval ?)
-
-```{r}
+```{r, echo=F, message=F, warning=F}
 
 library(evd)
+
 # data frame for the 99 quantile and measure of uncertainty for all the type
 thresholds <- c(60, 70, 125, 200, 100, 700, 100, 50, 35, 100, 25, 30)
 data99 <- data.frame(matrix(0, nrow = 2, ncol = length(unique(ts$type))))
 colnames(data99) <- unique(ts$type)
 rownames(data99) <- c("quantile99","uncertainty")
-
 
 for (i in 1:ncol(data99)){
 
@@ -1010,20 +1028,14 @@ for (i in 1:ncol(data99)){
 }
 
 data99
+
 ```
-
-
-
 
 # Detecting Simultaneous High Load
 
-- Propose one graphical method
-- Propose one numerical method
+## Graphical Method
 
-for detecting simultaneous high load across the 12 series provided, Which pages seem to have simultaneous high load?
-
-```{r}
-
+```{r, echo=F, message=F, warning=F}
 
 library(extRemes)
 # idea for graphical representation : block maxima by week colored by type
@@ -1035,36 +1047,24 @@ bm <- blockmaxxer(tsnona, blocks = tsnona$date, which="daily count modified")
 
 library(plotly)
 
-c <-ggplot(tsnona, aes(x=date, y=`daily count modified`)) + geom_point(aes(color = type)) + geom_point(data=bm,aes(date,`daily count modified`, fill = type), colour = "lightpink1") 
+c <-ggplot(tsnona, aes(x=date, y=`daily count modified`)) + 
+  geom_point(aes(color = type)) + 
+  geom_point(data = bm, aes(date,`daily count modified`, fill = type),
+             colour = "lightpink1") 
 
 ggplotly(c)
 
-
 ```
 
+## Numerical Method
 
-```{r}
-# numerical method 
-# GDP model ?
-#https://rdrr.io/cran/evir/man/gpd.html
-library(evir)
-modified_NoNA <- modified_ts %>% filter(!is.na(`daily count modified`))
+```{r, echo=F, message=F, warning=F}
 
-gpd.model <- gpd(modified_NoNA$`daily count modified`, threshold = mean(thresholds))
-
-gpd.plot <- tailplot(gpd.model)
-
-#gpd.sf <- gpd.sfall(gpd.plot,0.99)
-
-```
-
-
-```{r}
 library(FRAPO)
 
 modified_pivot <- modified_NoNA %>% pivot_wider(values_from =`daily count modified`, names_from = type,date)
 
-
 tdc(modified_pivot[,-1], method = "EVT")
+
 ```
 
