@@ -95,8 +95,7 @@ log_returns %>%
 ```
 # Peak-Over-Threshold 
 
-We choose a threshold of 0.05 based on the mean residual plot. We plot the mean over
-We 
+We choose a threshold of 0.05 based on the mean residual plot. We plot the mean over and we use a peak over threshold model and display its estimate of the uncertainty  
 
 ```{r, echo=F, warning=F, message=F}
 
@@ -144,7 +143,7 @@ library(ismev)
 gpd_fit <- gpd.fit(log_returns_NoNA$neg_log_returns, 0.05)
 
 ```
-By using the POT approach, we built a model for high values of the negative log-returns where we obtain the Maximum Likelihood Estimates for the scale (sigma) and shape (ksi) parameters/coefficients : 0.01965532 and 0.60647468 [ARE THEY THE COEFF THEY ASKED TO REPORT ??], with Standard Errors being 0.00558524 and 0.24858608. [DOES THIS CORRESPONDS TO THE MEASURE OF UNCERTAINTY ??]
+By using the POT approach, we built a model for high values of the negative log-returns where we obtain the Maximum Likelihood Estimates for the scale (sigma) and shape (ksi) parameters/coefficients : 0.01965532 and 0.60647468, with Standard Errors being 0.00558524 and 0.24858608.
 
 
 
