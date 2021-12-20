@@ -16,6 +16,7 @@ library(tidyverse)
 library(ggplot2)
 library(plotly)
 library(tidyquant)
+library(evd)
 
 # Read in the data
 load(file = here::here("stocks.Rdata"))

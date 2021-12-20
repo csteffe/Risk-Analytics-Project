@@ -13,6 +13,7 @@ library(tidyverse)
 library(ggplot2)
 library(fpp3)
 library(ggthemes)
+library(evd)
 
 options(scipen=999)
 
@@ -205,7 +206,7 @@ For the following modified time series where the POT is not suitable, we suggest
 
 ### Elizabeth II {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -222,7 +223,7 @@ For the following modified time series where the POT is not suitable, we suggest
 
 ```
 
-#### Mean Residual Plot
+#### Mean Residual Plot  
 
 The selected threshold $u$ is 125.
 
@@ -241,7 +242,7 @@ The selected threshold $u$ is 125.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are not too few data points exceeding the threshold nor to many. Therefore, we assume that using the POT model is suitable. 
 
@@ -271,7 +272,7 @@ The chosen threshold indicates that there are not too few data points exceeding 
 
 ```
 
-#### GPD Fit - Diagnostic Plot
+#### GPD Fit - Diagnostic Plot  
 
 The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the residual distribution, here it a Bimodal distribution.
@@ -294,7 +295,7 @@ plot(gpd_e2)
 
 ### United States {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -310,7 +311,7 @@ plot(gpd_e2)
 
 ```
 
-#### Mean Residual Plot
+#### Mean Residual Plot  
 
 The selected threshold $u$ is 35.
 
@@ -328,7 +329,7 @@ The selected threshold $u$ is 35.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable. 
 
@@ -360,7 +361,7 @@ The chosen threshold indicates that there are few data points exceeding the thre
 ```
 
 
-#### GPD Fit - Diagnostic Plot
+#### GPD Fit - Diagnostic Plot  
 
 The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow quite well the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the residual distribution, here it is a Bimodal distribution.
@@ -383,7 +384,7 @@ plot(gpd_us)
 
 ### Queen Victoria {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -417,7 +418,7 @@ The selected threshold $u$ is 100.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are not too few nor too many data points exceeding the threshold. Therefore, we assume that using the POT model is suitable. 
 
@@ -448,7 +449,7 @@ The chosen threshold indicates that there are not too few nor too many data poin
 
 ```
 
-#### GPD Fit - Diagnostic Plot
+#### GPD Fit - Diagnostic Plot  
 
 The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the residual distribution, here it seems to be a Bimodal distribution.
@@ -472,7 +473,7 @@ plot(gpd_qv)
 
 ### World War II {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -488,7 +489,7 @@ plot(gpd_qv)
 
 ```
 
-#### Mean Residual Plot
+#### Mean Residual Plot  
 
 The selected threshold $u$ is 30.
 
@@ -506,7 +507,7 @@ The selected threshold $u$ is 30.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are not too few nor too many data points exceeding the threshold. Therefore, we assume that using the POT model is suitable. 
 
@@ -537,7 +538,7 @@ The chosen threshold indicates that there are not too few nor too many data poin
 
 ```
 
-#### GPD Fit - Diagnostic Plot
+#### GPD Fit - Diagnostic Plot  
 
 The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the distribution, here the data seems right-skewed.
@@ -561,7 +562,7 @@ plot(gpd_ww2)
 
 ### World War I {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -577,7 +578,7 @@ plot(gpd_ww2)
 
 ```
 
-#### Mean Residual Plot
+#### Mean Residual Plot  
 
 The selected threshold $u$ is 25.
 
@@ -595,7 +596,7 @@ The selected threshold $u$ is 25.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are not too few nor too many data points exceeding the threshold. Therefore, we assume that using the POT model is suitable. 
 
@@ -626,7 +627,7 @@ The chosen threshold indicates that there are not too few nor too many data poin
 
 ```
 
-#### GPD Fit - Diagnostic Plot
+#### GPD Fit - Diagnostic Plot  
 
 The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
@@ -650,7 +651,7 @@ plot(gpd_ww1)
 
 ### George VI {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -666,7 +667,7 @@ plot(gpd_ww1)
 
 ```
 
-#### Mean Residual Plot
+#### Mean Residual Plot  
 
 The selected threshold $u$ is 200.
 
@@ -684,7 +685,7 @@ The selected threshold $u$ is 200.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable. 
 
@@ -715,7 +716,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ```
 
-#### GPD Fit - Diagnostic Plot
+#### GPD Fit - Diagnostic Plot  
 
 The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here it seems to be a Bimodal distribution.
@@ -739,7 +740,7 @@ plot(gpd_g6)
 
 ### United Kingdom {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -755,7 +756,7 @@ plot(gpd_g6)
 
 ```
 
-#### Mean Residual Plot
+#### Mean Residual Plot  
 
 The selected threshold $u$ is 50.
 
@@ -773,7 +774,7 @@ The selected threshold $u$ is 50.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable.
 
@@ -804,7 +805,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ```
 
-#### GPD Fit - Diagnostic Plot
+#### GPD Fit - Diagnostic Plot  
 
 The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
@@ -828,7 +829,7 @@ plot(gpd_uk)
 
 ### Princess Margaret, Countess of Snowdon {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -844,7 +845,7 @@ plot(gpd_uk)
 
 ```
 
-#### Mean Residual Plot
+#### Mean Residual Plot  
 
 The selected threshold $u$ is 700.
 
@@ -862,7 +863,7 @@ The selected threshold $u$ is 700.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable.
 
@@ -892,7 +893,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ```
 
-#### GPD Fit - Diagnostic Plot
+#### GPD Fit - Diagnostic Plot  
 
 The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line whether in the bulk of the distribution or at the end. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
@@ -916,7 +917,7 @@ plot(gpd_marg)
 
 ### Prince Philip, Duke of Edinburgh {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -932,7 +933,7 @@ plot(gpd_marg)
 
 ```
 
-#### Mean Residual Plot
+#### Mean Residual Plot  
 
 The selected threshold $u$ is 400.
 
@@ -950,7 +951,7 @@ The selected threshold $u$ is 400.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable.
 
@@ -983,7 +984,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ### Winston Churchill {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -999,7 +1000,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ```
 
-#### Mean Residual Plot
+#### Mean Residual Plot  
 
 The selected threshold $u$ is 100.
 
@@ -1017,7 +1018,7 @@ The selected threshold $u$ is 100.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable.
 
@@ -1051,7 +1052,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ### Diana, Princess of Wales {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -1067,7 +1068,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ```
 
-#### Mean Residual Plot
+#### Mean Residual Plot  
 
 The selected threshold $u$ is 70.
 
@@ -1085,7 +1086,7 @@ The selected threshold $u$ is 70.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are not too few nor to many data points exceeding the threshold. Therefore, we assume that using the POT model is suitable.
 
@@ -1116,7 +1117,7 @@ The chosen threshold indicates that there are not too few nor to many data point
 ```
 
 
-#### GPD Fit - Diagnostic Plot
+#### GPD Fit - Diagnostic Plot  
 
 The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here the Residual distribution seems to be right-skewed.
@@ -1140,7 +1141,7 @@ plot(gpd_diana)
 
 ### 2016 Summer Olympics {.tabset}
 
-#### Distribution
+#### Distribution  
 
 ```{r, echo=F, message=F, warning=F}
 
@@ -1156,7 +1157,7 @@ plot(gpd_diana)
 
 ```
 
-#### Mean Residual Plot
+#### Mean Residual Plot  
 
 The selected threshold $u$ is 60.
 
@@ -1174,7 +1175,7 @@ The selected threshold $u$ is 60.
 
 ```
 
-#### Peaks-Over-Threshold Plot
+#### Peaks-Over-Threshold Plot  
 
 The chosen threshold indicates that there are too few data points exceeding the threshold. Therefore, we believe that using the POT model is maybe not suitable.
 
@@ -1204,7 +1205,7 @@ The chosen threshold indicates that there are too few data points exceeding the 
 
 ```
 
-#### GPD Fit - Diagnostic Plot
+#### GPD Fit - Diagnostic Plot  
 
 The Empirical Quantiles plot shows that the residuals of the modified daily count distributions does not really follow a gpd distribution since it does follow closely the regression line in the bulk of the distribution but move away from it at the end when in the tail. So the GPD model is probably appropriate to use for this time series.
 The Density plot allows us to see the overall shape of the Residual distribution, here the data seems right-skewed.
@@ -1226,7 +1227,7 @@ plot(gpd_sumol)
 ```
 
 
-## 99-Quantile
+## 99-Quantile  
 
 The following outcome shows the 99%-quantile and uncertainty measures of the modified daily count modified for each time series. To generate these results we use the *quantile* function of the *stats* package and the standard error of the peaks-over-threshold model. 
 
@@ -1314,7 +1315,7 @@ modified_NoNA <- modified_ts %>% drop_na
 
 modified_pivot <- modified_NoNA %>% pivot_wider(values_from =`daily count modified`, names_from = type,date)
 
-tdc(modified_pivot[,-1], method = "EVT") %>% knitr::kable()
+tdc(modified_pivot[,-1], method = "EVT") %>% round(digits = 3) %>% knitr::kable()
 
 ```
 
